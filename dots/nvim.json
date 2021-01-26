@@ -1,0 +1,9 @@
+{
+    "Name": "NeoVim",
+    "Command": "nvim",
+    "Files": [
+        "$HOME/.vim/",
+        "$HOME/.vimrc",
+        "$XDG_USER_CONFIG_DIR/nvim"
+    ]
+}

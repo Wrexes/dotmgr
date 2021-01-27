@@ -1,0 +1,8 @@
+{
+    "Name": "Vim",
+    "Command": "vim",
+    "Files": [
+        "$HOME/.vim/",
+        "$HOME/.vimrc"
+    ]
+}

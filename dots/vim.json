@@ -1,8 +1,11 @@
 {
     "Name": "Vim",
     "Command": "vim",
-    "Files": [
+    "Include": [
         "$HOME/.vim/",
         "$HOME/.vimrc"
+    ],
+    "Exclude": [
+        "plugged"
     ]
 }

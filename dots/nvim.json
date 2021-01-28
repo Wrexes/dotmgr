@@ -1,9 +1,12 @@
 {
     "Name": "NeoVim",
     "Command": "nvim",
-    "Files": [
+    "Include": [
         "$HOME/.vim/",
         "$HOME/.vimrc",
         "$XDG_USER_CONFIG_DIR/nvim"
+    ],
+    "Exclude": [
+        "plugged"
     ]
 }

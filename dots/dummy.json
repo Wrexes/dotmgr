@@ -1,7 +1,7 @@
 {
     "Name": "Dummy",
     "Command": "la_sauce",
-    "Files": [
+    "Include": [
         ""
     ]
 }

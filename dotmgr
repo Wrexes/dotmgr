@@ -2,25 +2,15 @@
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
 #
-# Copyright © 2021 wrexes <wrexes@voyager>
-#
-# Distributed under terms of the MIT license.
+# Project by
+# Ludovic Fernandez
+# http://github.com/Wrexes
 
 import shutil
 import os
+from fnmatch import fnmatch
 from glob import glob as wildcard
 
-from include.eprint import eprint
-from include.Dot import Dot
+import tools
+import dots
 
-dots = []
-dotsDir = os.path.abspath('./dots')
-toSave = []
-
-for _ in wildcard(os.path.join(dotsDir, '*.json')):
-    dots.append(Dot.from_json(_))
-
-for item in dots:
-    if shutil.which(item.command) is None:
-        continue
-    print(item.name)

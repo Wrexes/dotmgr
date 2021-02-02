@@ -14,4 +14,6 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 def realpath(path: str) -> str:
-    return os.path.expandvars(os.path.expanduser(path))
+    path = os.path.expandvars(path)
+    path = os.path.expanduser(path)
+    return path

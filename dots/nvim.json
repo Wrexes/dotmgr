@@ -3,7 +3,7 @@
     "Command": "nvim",
     "Include": [
         "$HOME/.vim/",
-        "$HOME/.vimrc",
+        "~/.vimrc",
         "$XDG_USER_CONFIG_DIR/nvim"
     ],
     "Exclude": [

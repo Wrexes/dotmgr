@@ -16,10 +16,22 @@ from glob import glob as wildcard
 
 import tools
 
+"""
+    Class: Dot
+    Contains all the necessary information for backing up a software's dotfiles
+
+    Dot.name: Application name.
+    Dot.command: Shell command that can be used with `which` to check for an app's presence.
+    Dot.include: Files to include in the backup. Supports environment variables and user (~) expansion.
+    Dot.exclude: Files to exclude from the backup. Supports UNIX style globbing (think gitignore).
+    Dot.files: List of paths to actual files and directories to save ; fetched from checking the existence
+               of what's in Dot.include and the content from any directory in that list.
+"""
+
 
 class Dot:
 
-    def __init__(self, Name=None, Command=None, Include=[], Exclude=[]):
+    def __init__(self, Name: str = None, Command: str = None, Include: list[str] = [], Exclude: list[str] = []):
         self.name = Name
         self.command = Command
         self.include = Include
@@ -117,6 +129,8 @@ class Dot:
         return fileSet
 
 # Read every JSON file in given confd directory and create a list of Dot objects.
+
+
 def get_list(confd: str = "./dots") -> list[Dot]:
     dotList = []
     for _ in wildcard(os.path.join(confd, '*.json')):

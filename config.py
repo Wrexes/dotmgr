@@ -12,9 +12,8 @@ from glob import glob as wildcard
 
 import defaults
 
-xdgConfDir = defaults.xdgConfDir
-confDir = defaults.confDir
-
+xdgConfDir = defaults.xdgConfDir    # User config dir
+confDir = defaults.confDir          # dotmgr config dir
 
 # Create missing directories
 if not os.path.exists(xdgConfDir):

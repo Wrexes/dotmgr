@@ -10,9 +10,11 @@
 import sys
 import os
 
+# Print a message on stderr
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
+# Expand a path's environment variables and user (~)
 def realpath(path: str) -> str:
     path = os.path.expandvars(path)
     path = os.path.expanduser(path)

@@ -37,7 +37,7 @@ class Dot:
         self.include = Include
         self.exclude = Exclude
         self.files = None
-        self.files = self.get_file_list()
+        # self.files = self.get_file_list()
         self.__validate()
 
     def __str__(self) -> str:
@@ -128,9 +128,8 @@ class Dot:
                     fileSet.add(os.path.join(root, f))
         return fileSet
 
+
 # Read every JSON file in given confd directory and create a list of Dot objects.
-
-
 def get_list(confd: str = "./dots") -> list[Dot]:
     dotList = []
     for _ in wildcard(os.path.join(confd, '*.json')):

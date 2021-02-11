@@ -50,14 +50,14 @@ class Dot:
     # Create a Dot object using a JSON file's content
     # json_string: Buffered content of a JSON file
     @classmethod
-    def from_json_string(cls, json_string: str) -> Dot:
+    def from_json_string(cls, json_string: str):
         json_dict = json.loads(json_string)
         return cls(**json_dict)
 
     # Create a Dot object importing a JSON file from given path
     # json_file: Path to JSON file
     @classmethod
-    def from_json(cls, json_file: str) -> Dot:
+    def from_json(cls, json_file: str):
         try:
             with open(json_file, "r") as jf:
                 return cls.from_json_string(jf.read())

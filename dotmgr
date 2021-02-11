@@ -6,42 +6,7 @@
 # Ludovic Fernandez
 # http://github.com/Wrexes
 
-import os
-import sys
-import tempfile
-
-import argparse
-from distutils import fancy_getopt
-
 import tools
 import dot
-
-""" Subcommand and argument parsing """
-# Main argument parser
-parser = argparse.ArgumentParser(
-    description="A fully configurable dotfile backup and restore tool")
-
-# Add subcommands, make them mandatory
-subparsers = parser.add_subparsers(title="Operations", required=True)
-
-# Subcommand: list
-desc_list = "List supported or installed apps"
-parser_list = subparsers.add_parser("list",
-                                    help=desc_list,
-                                    description=desc_list)
-group_list = parser_list.add_mutually_exclusive_group()
-group_list.add_argument("--installed",
-                        help="List supported app that are installed on your machine (default)",
-                        action="store_true")
-group_list.add_argument("--supported",
-                        help="List every supported app, wether they are installed or not",
-                        action="store_true")
-
-
-def op_list():
-    parser.add_argument("supported", help="List supported apps")
-    parser.add_argument(
-        "installed", help="List supported apps that are installed on your machine")
-
-
-args = parser.parse_args()
+import parsers
+import commands

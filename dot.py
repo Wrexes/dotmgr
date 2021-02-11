@@ -16,6 +16,7 @@ from glob import glob as wildcard
 
 import tools
 
+
 """
     Class: Dot
     Contains all the necessary information for backing up a software's dotfiles
@@ -24,8 +25,7 @@ import tools
     Dot.command: Shell command that can be used with `which` to check for an app's presence.
     Dot.include: Files to include in the backup. Supports environment variables and user (~) expansion.
     Dot.exclude: Files to exclude from the backup. Supports UNIX style globbing (think gitignore).
-    Dot.files: List of paths to actual files and directories to save ; fetched from checking the existence
-               of what's in Dot.include and the content from any directory in that list.
+    Dot.files: Set of tuples containing (directory, file) for each config to save
 """
 
 
@@ -37,7 +37,6 @@ class Dot:
         self.include = Include
         self.exclude = Exclude
         self.files = None
-        # self.files = self.get_file_list()
         self.__validate()
 
     def __str__(self) -> str:
@@ -68,7 +67,6 @@ class Dot:
     # Private method to check that a Dot object has valid necessary values.
     # It is automatically called in Dot.__init__ which means you should never
     # have to use it yourself.
-
     def __validate(self):
         reval = "^[a-zA-Z0-9_][a-zA-Z0-9_i\-]+$"
         if self.name is None:
@@ -103,15 +101,12 @@ class Dot:
             raise FileNotFoundError
         return path
 
-    # Return a Dot object's .files property.
-    # If a Dot object's .files property is none, create and populate it, then return it.
-    # This will look recursively for all existing & non excluded paths based on a Dot's includes and
-    # make a set from the results.
-    def get_file_list(self) -> set[str]:
+    # Populate a Dot object's .files property.
+    def find_confs(self) -> set[(str, str)]:
         if self.files is not None:
             return self.files
-        fileSet = set()
         path = None
+        fileSet = set()
         for inc in self.include:
             try:
                 path = self.get_file_path(inc)
@@ -120,13 +115,17 @@ class Dot:
             if self.is_excluded(path):
                 continue
             if os.path.isfile(path):
-                fileSet.add(path)
+                fileSet.add((os.path.dirname(path), os.path.basename(path)))
+                continue
             for root, dirs, files in os.walk(path):
+                if self.is_excluded(root):
+                    continue
                 for f in files:
-                    if self.is_excluded(root) or self.is_excluded(f):
+                    if self.is_excluded(f):
                         continue
-                    fileSet.add(os.path.join(root, f))
-        return fileSet
+                    fileSet.add((root, f))
+        self.files = fileSet
+        return self.files
 
 
 # Read every JSON file in given confd directory and create a list of Dot objects.

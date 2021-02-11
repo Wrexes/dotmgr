@@ -11,22 +11,22 @@ import re
 import shutil
 import os
 import fnmatch
-
 from glob import glob as wildcard
 
 import tools
+from config import cacheDir
 
 
-"""
-    Class: Dot
+""" Class: Dot
+
     Contains all the necessary information for backing up a software's dotfiles
 
     Dot.name: Application name.
     Dot.command: Shell command that can be used with `which` to check for an app's presence.
     Dot.include: Files to include in the backup. Supports environment variables and user (~) expansion.
     Dot.exclude: Files to exclude from the backup. Supports UNIX style globbing (think gitignore).
-    Dot.files: Set of tuples containing (directory, file) for each config to save
-"""
+    Dot.files: Set of tuples containing (directory, file) for each config to save.
+    """
 
 
 class Dot:
@@ -37,11 +37,13 @@ class Dot:
         self.include = sorted(Include)
         self.exclude = sorted(Exclude)
         self.files = None
+        self.cache = os.path.join(cacheDir, self.command)
         self.__validate()
 
     def __str__(self) -> str:
-        ret =  "Name:     {self.name}\n"
+        ret = "Name:     {self.name}\n"
         ret += "Command:  {self.command}\n"
+        ret += "Cache:    {self.cache}\n"
         ret += "Include:\n"
         for i in self.include:
             ret += "  " + i + "\n"

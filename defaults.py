@@ -14,5 +14,8 @@ if "XDG_USER_CONFIG_DIR" in os.environ:
 else:
     xdgConfDir = os.path.expanduser('~/.config')
 
-# Set the default configuration directory
+# Default configuration directory
 confDir = os.path.join(xdgConfDir, 'dotmgr')
+
+# Default cache directory
+cacheDir = os.path.expanduser("~/.cache/dotmgr")

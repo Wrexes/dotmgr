@@ -10,39 +10,38 @@ import os
 import sys
 import tempfile
 
+import argparse
+from distutils import fancy_getopt
+
 import tools
 import dot
 
-def op_help():
-    usage = "Usage: "
-    usage += os.path.basename(sys.argv[0]) + " [list|backup|restore|help] [options...]\n"
-    usage += "- list     List stuff like installed apps and available Dot configurations\n"
-    usage += "- backup   Any operation related to saving existing dotfiles\n"
-    usage += "- restore  Any operation related to restoring an existing backup\n"
-    usage += "- help     Display this and exit\n"
-    print(usage)
+""" Subcommand and argument parsing """
+# Main argument parser
+parser = argparse.ArgumentParser(
+    description="A fully configurable dotfile backup and restore tool")
+
+# Add subcommands, make them mandatory
+subparsers = parser.add_subparsers(title="Operations", required=True)
+
+# Subcommand: list
+desc_list = "List supported or installed apps"
+parser_list = subparsers.add_parser("list",
+                                    help=desc_list,
+                                    description=desc_list)
+group_list = parser_list.add_mutually_exclusive_group()
+group_list.add_argument("--installed",
+                        help="List supported app that are installed on your machine (default)",
+                        action="store_true")
+group_list.add_argument("--supported",
+                        help="List every supported app, wether they are installed or not",
+                        action="store_true")
 
 
 def op_list():
-    pass
+    parser.add_argument("supported", help="List supported apps")
+    parser.add_argument(
+        "installed", help="List supported apps that are installed on your machine")
 
 
-operations = {
-    "list": op_list,
-    "backup": None,
-    "restore": None,
-    "help": op_help,
-}
-
-if len(sys.argv) > 1:
-    whatdo = sys.argv[1]
-    del sys.argv[1]
-else:
-    whatdo = "help"
-
-if whatdo not in operations.keys():
-    sys.exit("Urecognized command: " + whatdo + "\n"
-             "Try `" + os.path.basename(sys.argv[0]) + " help` for more information.")
-
-main = operations[whatdo]
-main()
+args = parser.parse_args()

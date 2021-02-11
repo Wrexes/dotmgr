@@ -34,16 +34,27 @@ class Dot:
     def __init__(self, Name: str = None, Command: str = None, Include: list[str] = [], Exclude: list[str] = []):
         self.name = Name
         self.command = Command
-        self.include = Include
-        self.exclude = Exclude
+        self.include = sorted(Include)
+        self.exclude = sorted(Exclude)
         self.files = None
         self.__validate()
 
     def __str__(self) -> str:
-        ret = "<Name>\n\t{self.name}\n"
-        ret += "<Command>\n\t{self.command}\n"
-        ret += "<Include>\n\t{self.include}\n"
-        ret += "<Exclude>\n\t{self.exclude}\n"
+        ret =  "Name:     {self.name}\n"
+        ret += "Command:  {self.command}\n"
+        ret += "Include:\n"
+        for i in self.include:
+            ret += "  " + i + "\n"
+        ret += "Exclude:\n"
+        for i in self.exclude:
+            ret += "  " + i + "\n"
+        ret += "Configs:"
+        if self.files is None or len(self.files) < 1:
+            ret += "\n  None set yet.\n"
+            ret += "  Use the object's find_confs() method to populate."
+        else:
+            for i in sorted(self.files):
+                ret += "\n  " + i.__str__()
         return ret.format(self=self)
 
     # Create a Dot object using a JSON file's content

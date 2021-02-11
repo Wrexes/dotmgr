@@ -6,11 +6,43 @@
 # Ludovic Fernandez
 # http://github.com/Wrexes
 
-import shutil
 import os
-from fnmatch import fnmatch
-from glob import glob as wildcard
+import sys
+import tempfile
 
 import tools
 import dot
 
+def op_help():
+    usage = "Usage: "
+    usage += os.path.basename(sys.argv[0]) + " [list|backup|restore|help] [options...]\n"
+    usage += "- list     List stuff like installed apps and available Dot configurations\n"
+    usage += "- backup   Any operation related to saving existing dotfiles\n"
+    usage += "- restore  Any operation related to restoring an existing backup\n"
+    usage += "- help     Display this and exit\n"
+    print(usage)
+
+
+def op_list():
+    pass
+
+
+operations = {
+    "list": op_list,
+    "backup": None,
+    "restore": None,
+    "help": op_help,
+}
+
+if len(sys.argv) > 1:
+    whatdo = sys.argv[1]
+    del sys.argv[1]
+else:
+    whatdo = "help"
+
+if whatdo not in operations.keys():
+    sys.exit("Urecognized command: " + whatdo + "\n"
+             "Try `" + os.path.basename(sys.argv[0]) + " help` for more information.")
+
+main = operations[whatdo]
+main()

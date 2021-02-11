@@ -138,7 +138,7 @@ class Dot:
         return self.files
 
 # Return a list of installed apps that are supported
-def get_list(confd: str = "./dots") -> list[Dot]:
+def installed(confd: str = "./dots") -> list[Dot]:
     dotList = []
     for f in wildcard(os.path.join(confd, "*.json")):
         dot = Dot.from_json(f)
@@ -146,3 +146,7 @@ def get_list(confd: str = "./dots") -> list[Dot]:
             continue
         dotList.append(dot)
     return dotList
+
+# Return a list of supported apps
+def supported(confd: str = "./dots") -> list[Dot]:
+    return [Dot.from_json(f) for f in wildcard(os.path.join(confd, "*.json"))]

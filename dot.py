@@ -14,7 +14,6 @@ import fnmatch
 from glob import glob as wildcard
 
 import tools
-from config import cacheDir
 
 
 """ Class: Dot
@@ -37,13 +36,11 @@ class Dot:
         self.include = sorted(Include)
         self.exclude = sorted(Exclude)
         self.files = None
-        self.cache = os.path.join(cacheDir, self.command)
         self.__validate()
 
     def __str__(self) -> str:
         ret = "Name:     {self.name}\n"
         ret += "Command:  {self.command}\n"
-        ret += "Cache:    {self.cache}\n"
         ret += "Include:\n"
         for i in self.include:
             ret += "  " + i + "\n"
@@ -118,7 +115,7 @@ class Dot:
     def find_confs(self) -> set[(str, str)]:
         if self.files is not None:
             return self.files
-        path = None
+        path = ""
         fileSet = set()
         for inc in self.include:
             try:
@@ -140,12 +137,11 @@ class Dot:
         self.files = fileSet
         return self.files
 
-
-# Read every JSON file in given confd directory and create a list of Dot objects.
+# Return a list of installed apps that are supported
 def get_list(confd: str = "./dots") -> list[Dot]:
     dotList = []
-    for _ in wildcard(os.path.join(confd, '*.json')):
-        dot = Dot.from_json(_)
+    for f in wildcard(os.path.join(confd, "*.json")):
+        dot = Dot.from_json(f)
         if shutil.which(dot.command) is None:
             continue
         dotList.append(dot)

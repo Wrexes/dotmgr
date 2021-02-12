@@ -7,6 +7,8 @@
 # http://github.com/Wrexes
 
 import os
+import getpass
+import tempfile
 
 # Set the base directory for config files
 if "XDG_USER_CONFIG_DIR" in os.environ:
@@ -18,4 +20,7 @@ else:
 confDir = os.path.join(xdgConfDir, 'dotmgr')
 
 # Default cache directory
-cacheDir = os.path.expanduser("~/.cache/dotmgr")
+cacheDir = tempfile.gettempdir()
+
+# What is the user's name ?
+userName = getpass.getuser()

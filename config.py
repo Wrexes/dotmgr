@@ -7,14 +7,17 @@
 # http://github.com/Wrexes
 
 import os
+import getpass
 
 from glob import glob as wildcard
 
 import defaults
 
-xdgConfDir = defaults.xdgConfDir    # User's default config directory
-confDir = defaults.confDir          # Directory where settings for dotmgr are stored
-cacheDir = defaults.cacheDir        # A place to store conf copies before saving them
+userName = defaults.userName
+
+xdgConfDir = defaults.xdgConfDir
+confDir = defaults.confDir
+cacheDir = defaults.cacheDir
 
 # Create missing directories
 if not os.path.exists(xdgConfDir):

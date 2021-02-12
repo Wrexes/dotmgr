@@ -33,8 +33,8 @@ class Dot:
     def __init__(self, Name: str = None, Command: str = None, Include: list[str] = [], Exclude: list[str] = []):
         self.name = Name
         self.command = Command
-        self.include = sorted(Include)
-        self.exclude = sorted(Exclude)
+        self.include = sorted([f.rstrip('/') for f in Include])
+        self.exclude = sorted([f.rstrip('/') for f in Exclude])
         self.files = None
         self.__validate()
 

@@ -37,7 +37,7 @@ class save:
         # For every file/dir, create a copy in the cache and add where to restore it in the matching dict
         for src in dot.include:
             dst = os.path.join(cache, os.path.basename(src))
-            if os.path.isfile(dot.get_file_path(src)):
+            if os.path.isfile(tools.realpath(src)):
                 shutil.copy2(tools.realpath(src), dst)
             else:
                 shutil.copytree(tools.realpath(src), dst)

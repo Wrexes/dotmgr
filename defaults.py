@@ -16,11 +16,17 @@ if "XDG_USER_CONFIG_DIR" in os.environ:
 else:
     xdgConfDir = os.path.expanduser('~/.config')
 
+# What is the user's name ?
+userName = getpass.getuser()
+
 # Default configuration directory
 confDir = os.path.join(xdgConfDir, 'dotmgr')
 
 # Default cache directory
 cacheDir = tempfile.gettempdir()
 
-# What is the user's name ?
-userName = getpass.getuser()
+# Default archive name
+tarName = "my_dotfiles.tar.gz"
+
+# Default archive path
+tarPath = os.path.join(cacheDir, tarName)

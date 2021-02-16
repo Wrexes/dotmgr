@@ -28,8 +28,16 @@ class list:
             print(dot.name)
 
 
-class save:
+class load:
+    # Check if the archive contains given config
+    @staticmethod
+    def has_conf(dot: dot, userName=config.userName, confName="default", tarPath=config.tarPath):
+        conf = "dotmgr_" + userName + "-" + dot.name + "-" + confName
+        with tarfile.open(tarPath, 'r:*') as tar:
+            return any(conf is os.path.basename(member.name) for member in tar.getmembers() if member.isdir())
 
+
+class save:
     # Build the name string for a cache
     @staticmethod
     def cache_path(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir):
@@ -68,6 +76,6 @@ class save:
     # Insert a cache into the archive where every configuration is saved
     @staticmethod
     def pack(cachePath: str, tarPath: str = config.tarPath):
-        cache = save.cache_path(dot, userName, confName, cacheDir)
-        with tarfile.open(os.path.join(config.cacheDir, "dotmgr.tar.gz"), 'a:gz') as tar:
-            pass
+        with tarfile.open(tarPath, 'a') as tar:
+            if ".config" in tar.members:
+                print("oui")

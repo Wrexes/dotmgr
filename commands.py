@@ -9,37 +9,40 @@
 import os
 import shutil
 import json
+from pprint import pprint
 
 import dot
 import tools
 import config
 import tarfile
 
-
 class list:
+
     @staticmethod
     def supported():
-        for dot in dot.supported():
-            print(dot.name)
+        pprint(dot.supported().keys())
 
     @staticmethod
     def installed():
-        for dot in dot.installed():
-            print(dot.name)
+        pprint(dot.installed().keys())
 
 
 class save:
-    """ Build the name string for a config directory """
+
+    """ Build the name string for a config directory
+        """
     @staticmethod
     def name(dot: dot, userName=config.userName, confName="default", confDir=config.confDir):
         return userName + "-" + dot.name + "-" + confName
 
-    """ Build the path string for a config directory """
+    """ Build the path string for a config directory
+        """
     @staticmethod
     def path(dot: dot, userName=config.userName, confName="default", confDir=config.confDir):
         return os.path.join(confDir, save.name(dot, userName, confName, confDir))
 
-    """ Create a directory that will store the saved config """
+    """ Create a directory that will store the saved config
+        """
     @staticmethod
     def save(dot: dot, userName=config.userName, confName="default", confDir=config.confDir, override=False):
         match = {}

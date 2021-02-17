@@ -29,7 +29,7 @@ Commands:
   save & load:
     [<app>]    Choose which app to save the configuration of.
                If none is given, go through the list of
-               installed apps interactively.
+               possible choices interactively.
     [<name>]   Name of the configuration.
                Default: "default"
     [<user>]   "Owner" of the configuration.

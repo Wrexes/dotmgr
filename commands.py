@@ -44,25 +44,25 @@ class save:
     """ Create a directory that will store the saved config
         """
     @staticmethod
-    def save(dot: dot, userName=config.userName, confName="default", confDir=config.confDir, override=False):
+    def save(dot: dot, userName=config.userName, confName="default", savePath=config.savePath, overwrite=False):
         match = {}
-        path = save.path(dot, userName, confName, confDir)
+        path = save.path(dot, userName, confName, savePath)
         # Check if the directory exists
         if os.path.exists(path):
             # If not, ask the user what to do
-            while not override:
-                answer = str(input(path + " already exists. Would you like to override it ? (y/n) "))
+            while not overwrite:
+                answer = str(input(dot.name + " config \"" + confName + "\" already exists for " + userName + ". Would you like to overwrite it ? (y/n) "))
                 if answer == 'y':
-                    override = True
+                    overwrite = True
                 elif answer == 'n':
                     break;
                 else:
                     continue
             # Keep going or stop here
-            if override:
+            if overwrite:
                 shutil.rmtree(path)
             else:
-                print("Skipping " + userName + "'s " + confName + " configuration for " + dot.name + ".")
+                print("Skipping " + userName + "'s configuration \"" + confName + "\" for " + dot.name + ".")
                 return
         os.mkdir(path)
         # For every file/dir, create a copy and store what goes where

@@ -24,9 +24,3 @@ confDir = os.path.join(xdgConfDir, 'dotmgr')
 
 # Default cache directory
 cacheDir = tempfile.gettempdir()
-
-# Default archive name
-tarName = "my_dotfiles.tar.gz"
-
-# Default archive path
-tarPath = os.path.join(cacheDir, tarName)

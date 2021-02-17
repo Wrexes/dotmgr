@@ -76,13 +76,3 @@ class save:
         # Create a JSON matching file
         with open(os.path.join(cache, "_dotmatch.json"), mode='wt') as f:
             json.dump(match, f, sort_keys=True)
-
-    """ Insert a cache into the archive where every configuration is saved """
-    @staticmethod
-    def pack(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir, override=False):
-        if load.has_conf(save.cache_name(dot, userName, confName, cacheDir)):
-            if not override:
-                raise FileExistsError("Configuration " + confName + " for " + dot.name + " is already in " + tarPath + "\n"
-                                      "Use --override to replace it.")
-
-        with tarfile.open(tarPath, 'a') as tar:

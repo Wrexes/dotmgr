@@ -19,9 +19,6 @@ xdgConfDir = defaults.xdgConfDir
 confDir = defaults.confDir
 cacheDir = defaults.cacheDir
 
-tarName = defaults.tarName
-tarPath = defaults.tarPath
-
 # Create missing directories
 if not os.path.exists(xdgConfDir):
     os.mkdir(xdgConfDir)

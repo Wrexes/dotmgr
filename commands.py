@@ -32,7 +32,7 @@ class save:
     """ Build the name string for a config directory
         """
     @staticmethod
-    def name(dot: dot, userName=config.userName, confName="default", confDir=config.confDir):
+    def name(dot: dot, userName=config.userName, confName="default"):
         return userName + "-" + dot.name + "-" + confName
 
     """ Build the path string for a config directory
@@ -51,7 +51,7 @@ class save:
         if os.path.exists(path):
             # If not, ask the user what to do
             while not override:
-                answer = str(input(path + " already exists. Would you like to override it ? (y/n)"))
+                answer = str(input(path + " already exists. Would you like to override it ? (y/n) "))
                 if answer == 'y':
                     override = True
                 elif answer == 'n':

@@ -22,8 +22,11 @@ userName = getpass.getuser()
 # dotmgr configuration directory
 confDir = os.path.join(xdgConfDir, 'dotmgr')
 
-# Default cache directory
-cacheDir = tempfile.gettempdir()
+# Default save directory name
+saveDir = "saved"
+
+# Default path to store saved configs
+savePath = os.path.join(confDir, saveDir)
 
 # Wheter to use symlinks or copies
 useLinks = True

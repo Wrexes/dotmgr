@@ -18,6 +18,8 @@ userName = defaults.userName
 xdgConfDir = defaults.xdgConfDir
 confDir = defaults.confDir
 cacheDir = defaults.cacheDir
+saveDir = defaults.saveDir
+savePath = defaults.savePath
 
 useLinks = defaults.useLinks
 

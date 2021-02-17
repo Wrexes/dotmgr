@@ -51,10 +51,10 @@ class save:
         if os.path.exists(path):
             # If not, ask the user what to do
             while not overwrite:
-                answer = str(input(dot.name + " config \"" + confName + "\" already exists for " + userName + ". Would you like to overwrite it ? (y/n) "))
+                answer = 'x' + str(input(dot.name + " config \"" + confName + "\" already exists for " + userName + ". Overwrite it ? (y/N) ")).lower()
                 if answer == 'y':
                     overwrite = True
-                elif answer == 'n':
+                elif answer in ['x', 'xn']:
                     break;
                 else:
                     continue

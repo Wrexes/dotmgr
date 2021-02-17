@@ -37,21 +37,21 @@ class load:
 
 
 class save:
-    """ Build the name string for a cache """
+    """ Build the name string for a config directory """
     @staticmethod
-    def cache_name(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir):
-        return "dotmgr_" + userName + "-" + dot.name + "-" + confName
+    def save_name(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir):
+        return userName + "-" + dot.name + "-" + confName
 
-    """ Build the path string for a cache """
+    """ Build the path string for a config directory """
     @staticmethod
-    def cache_path(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir):
-        return os.path.join(cacheDir, save.cache_name(dot, userName, confName, cacheDir))
+    def save_path(dot: dot, userName=config.userName, confName="default", confDir=config.confDir):
+        return os.path.join(confDir, save.save_name(dot, userName, confName, confDir))
 
     """ Create a temporary directory containing a copy of the dotfiles for given dot """
     @staticmethod
-    def cache(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir, override=False):
+    def save(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir, override=False):
         match = {}
-        cache = save.cache_path(dot, userName, confName, cacheDir)
+        cache = save.save_path(dot, userName, confName, cacheDir)
         if override is True and os.path.exists(cache):
             shutil.rmtree(cache)
         os.mkdir(cache)

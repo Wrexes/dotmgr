@@ -44,8 +44,27 @@ class save:
     def save(dot: dot, userName=config.userName, confName="default", confDir=config.confDir, override=False):
         match = {}
         path = save.path(dot, userName, confName, confDir)
-        if override is True and os.path.exists(path):
-            shutil.rmtree(path)
+
+        # Check if the directory exists
+        if os.path.exists(path):
+            # If not, ask the user what to do
+            while not override:
+                try:
+                    answer = str(input(path + " already exists. Would you like to override it ? (y/n)"))
+                    if answer == 'y':
+                        override = True
+                    elif answer == 'n':
+                        break;
+                    else:
+                        continue
+                except ValueError:
+                    continue
+            # Finally, keep going or stop here
+            if override:
+                shutil.rmtree(path)
+            else:
+                return
+
         os.mkdir(path)
 
         # For every file/dir, create a copy and store what goes where

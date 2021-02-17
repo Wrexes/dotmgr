@@ -11,13 +11,13 @@ dotmgr: A flexible dotfile manager
 
 Usage:
   dotmgr list [supported | installed | saved]
-  dotmgr save [<app>] [<name>] [<user>] [-f | --force] [--nolink] [--noload]
-  dotmgr load [<app>] [<name>] [<user>] [-f | --force] [--nolink]
+  dotmgr save [all | <app>] [<name>] [<user>] [-f | --force] [--nolink] [--noload]
+  dotmgr load [all | <app>] [<name>] [<user>] [-f | --force] [--nolink]
 
 Options:
   -h --help    Show this screen.
   --version    Show version.
-  -f, --force  Override existing configurations.
+  -f, --force  Overwrite existing configurations.
   --noload     Don't load the saved configuration.
   --nolink     Prefer copying files instead of using symlinks.
 
@@ -26,14 +26,19 @@ Commands:
     supported  Apps that dotmgr has a dot for.
     installed  Supported apps that is intalled on your machine.
     saved      Configurations that you have saved.
+
   save & load:
-    [<app>]    Choose which app to save the configuration of.
-               If none is given, go through the list of
-               possible choices interactively.
-    [<name>]   Name of the configuration.
-               Default: "default"
-    [<user>]   "Owner" of the configuration.
-               Default: Your username
+    [all| <app>]  Choose which app to save the configuration of.
+                   - If `all`, save every installed apps' configurations.
+                   - If the name of a supported app, save its configurations.
+                   - If left empty, go through the list of possible
+                     choices interactively.
+
+    [<name>]      Name of the configuration.
+                  Default: "default"
+
+    [<user>]      "Owner" of the configuration.
+                  Default: Your username
 """
 
 import docopt
@@ -45,3 +50,59 @@ import dot
 
 
 argv = docopt.docopt(__doc__, version='0.0.0')
+
+
+def main(argv):
+    if argv["list"]:
+        if argv["supported"]:
+            commands.list.supported()
+            return
+        if argv["installed"]:
+            commands.list.installed()
+            return
+        # if argv["saved"]:
+            # commands.list.saved()
+            # return
+
+    if argv["save"]:
+        dots = dot.installed()
+        params = {"overwrite": argv["--force"]}
+        if argv["<user>"]:
+            params["userName"] = argv["<user>"]
+        if argv["<name>"]:
+            params["confName"]
+
+        # Single app selected
+        if argv["<app>"]:
+            if argv["<app>"] not in dots.keys():
+                tools.eprint("App not found: " + argv["<app>"] + "\n" +
+                             "Please use the `list` command to make sure it is supported and installed.")
+                exit(1)
+            params["dot"] = dots[argv["<app>"]]
+            commands.save.save(**params)
+            return
+
+        # All apps
+        elif argv["all"]:
+            for item in dots.values():
+                print("Found supported app: " + item.name)
+                params["dot"] = item
+                commands.save.save(**params)
+
+        # Interactive
+        # TODO: Make menus (something like `yay`'s)
+        for item in dots.values():
+            print("Found supported app: " + item.name)
+            while answer := 'x' + str(input("Would you like to save it ? (Y/n): ")).lower():
+                if answer == 'xn':
+                    break
+                elif answer in ['xy', 'x']:
+                    params["dot"] = item
+                    commands.save.save(**params)
+                    break
+                else:
+                    continue
+
+
+if __name__ == "__main__":
+    main(argv)

@@ -6,7 +6,28 @@
 # Ludovic Fernandez
 # http://github.com/Wrexes
 
+"""
+dotmgr: A flexible dotfile manager
+
+Usage:
+  dotmgr list [supported | installed | saved]
+  dotmgr save [<user>] (all | app) [<name>] [-f | --force] [--nolink] [--noload]
+  dotmgr load [<user>] (all | app) [<name>] [-f | --force] [--nolink]
+
+Options:
+  -h --help    Show this screen.
+  --version    Show version.
+  -f, --force  Override existing configurations.
+  --noload     Don't load the saved configuration.
+  --nolink     Prefer copying files instead of using symlinks.
+"""
+
+import docopt
+
+import commands
+import config
 import tools
 import dot
-import parsers
-import commands
+
+
+argv = docopt.docopt(__doc__, version='0.0.0')

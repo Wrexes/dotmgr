@@ -28,14 +28,6 @@ class list:
             print(dot.name)
 
 
-class load:
-    """ Check if the archive contains given config """
-    @staticmethod
-    def has_conf(confName: str, tarPath=config.tarPath):
-        with tarfile.open(tarPath, 'r:*') as tar:
-            return any(confName is os.path.basename(member.name) for member in tar.getmembers() if member.isdir())
-
-
 class save:
     """ Build the name string for a config directory """
     @staticmethod

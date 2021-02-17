@@ -32,6 +32,7 @@ class Dot:
         self.command = Command
         self.include = sorted([f.rstrip('/') for f in Include])
         self.exclude = sorted([f.rstrip('/') for f in Exclude])
+        # TODO: Transform files into a property
         self.files = None
         self.__validate()
 
@@ -73,6 +74,7 @@ class Dot:
             with open(jsonFile, "r") as jf:
                 jsonString = jf.read()
             return cls.from_json_string(jsonString)
+        # TODO: Proper exception handling
         except json.JSONDecodeError as e:
             tools.eprint("Error while parsing " + jf.name + ":\n" + e.msg)
             exit(1)
@@ -131,6 +133,7 @@ class Dot:
         for inc in self.include:
             try:
                 path = self.get_file_path(inc)
+            # TODO: Proper exception handling
             except:
                 continue
             if self.is_excluded(path):
@@ -169,6 +172,7 @@ def installed(confd: str = config.confDir) -> dict[Dot]:
         try:
             with open(f, "r") as jf:
                 jsonDict = json.load(jf)
+        # TODO: Proper exception handling
         except:
             continue
         if shutil.which(jsonDict["Command"]) is None:

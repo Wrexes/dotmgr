@@ -29,7 +29,7 @@ class list:
 
 
 class load:
-    # Check if the archive contains given config
+    """ Check if the archive contains given config """
     @staticmethod
     def has_conf(confName: str, tarPath=config.tarPath):
         with tarfile.open(tarPath, 'r:*') as tar:
@@ -37,17 +37,17 @@ class load:
 
 
 class save:
-    # Build the name string for a cache
+    """ Build the name string for a cache """
     @staticmethod
     def cache_name(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir):
         return "dotmgr_" + userName + "-" + dot.name + "-" + confName
 
-    # Build the path string for a cache
+    """ Build the path string for a cache """
     @staticmethod
     def cache_path(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir):
         return os.path.join(cacheDir, save.cache_name(dot, userName, confName, cacheDir))
 
-    # Create a temporary directory containing a copy of the dotfiles for given dot
+    """ Create a temporary directory containing a copy of the dotfiles for given dot """
     @staticmethod
     def cache(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir, override=False):
         match = {}
@@ -77,7 +77,7 @@ class save:
         with open(os.path.join(cache, "_dotmatch.json"), mode='wt') as f:
             json.dump(match, f, sort_keys=True)
 
-    # Insert a cache into the archive where every configuration is saved
+    """ Insert a cache into the archive where every configuration is saved """
     @staticmethod
     def pack(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir, override=False):
         if load.has_conf(save.cache_name(dot, userName, confName, cacheDir)):

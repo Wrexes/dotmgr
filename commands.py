@@ -31,19 +31,19 @@ class list:
 class save:
     """ Build the name string for a config directory """
     @staticmethod
-    def save_name(dot: dot, userName=config.userName, confName="default", confDir=config.confDir):
+    def name(dot: dot, userName=config.userName, confName="default", confDir=config.confDir):
         return userName + "-" + dot.name + "-" + confName
 
     """ Build the path string for a config directory """
     @staticmethod
-    def save_path(dot: dot, userName=config.userName, confName="default", confDir=config.confDir):
-        return os.path.join(confDir, save.save_name(dot, userName, confName, confDir))
+    def path(dot: dot, userName=config.userName, confName="default", confDir=config.confDir):
+        return os.path.join(confDir, save.name(dot, userName, confName, confDir))
 
     """ Create a directory that will store the saved config """
     @staticmethod
     def save(dot: dot, userName=config.userName, confName="default", confDir=config.confDir, override=False):
         match = {}
-        path = save.save_path(dot, userName, confName, confDir)
+        path = save.path(dot, userName, confName, confDir)
         if override is True and os.path.exists(path):
             shutil.rmtree(path)
         os.mkdir(path)

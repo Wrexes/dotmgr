@@ -17,9 +17,7 @@ import tools
 import config
 
 
-""" Class: Dot
-
-    Contains all the necessary information for backing up a software's dotfiles
+""" Contains all the necessary information for backing up a software's dotfiles
 
     Dot.name: Application name.
     Dot.command: Shell command that can be used with `which` to check for an app's presence.
@@ -27,8 +25,6 @@ import config
     Dot.exclude: Files to exclude from the backup. Supports UNIX style globbing (think gitignore).
     Dot.files: Set of tuples containing (directory, file) for each config to save.
     """
-
-
 class Dot:
 
     def __init__(self, Name: str = None, Command: str = None, Include: list[str] = [], Exclude: list[str] = []):
@@ -63,18 +59,18 @@ class Dot:
         json_string: Buffered content of a JSON file
         """
     @classmethod
-    def from_json_string(cls, json_string: str):
-        json_dict = json.loads(json_string)
-        return cls(**json_dict)
+    def from_json_string(cls, jsonString: str):
+        jsonDict = json.loads(jsonString)
+        return cls(**jsonDict)
 
 
     """ Create a Dot object importing a JSON file from given path.
-        json_file: Path to JSON file
+        jsonFile : Path to JSON file
         """
     @classmethod
-    def from_json(cls, json_file: str):
+    def from_json(cls, jsonFile: str):
         try:
-            with open(json_file, "r") as jf:
+            with open(jsonFile, "r") as jf:
                 jsonString = jf.read()
             return cls.from_json_string(jsonString)
         except json.JSONDecodeError as e:

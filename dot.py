@@ -36,7 +36,6 @@ class Dot:
         self.files = None
         self.__validate()
 
-
     def __str__(self) -> str:
         ret = "Name:     {self.name}\n"
         ret += "Command:  {self.command}\n"
@@ -55,7 +54,6 @@ class Dot:
                 ret += "\n  " + i.__str__()
         return ret.format(self=self)
 
-
     """ Create a Dot object using a JSON file's content
         json_string: Buffered content of a JSON file
         """
@@ -63,7 +61,6 @@ class Dot:
     def from_json_string(cls, jsonString: str):
         jsonDict = json.loads(jsonString)
         return cls(**jsonDict)
-
 
     """ Create a Dot object importing a JSON file from given path.
         jsonFile : Path to JSON file
@@ -78,7 +75,6 @@ class Dot:
         except json.JSONDecodeError as e:
             tools.eprint("Error while parsing " + jf.name + ":\n" + e.msg)
             exit(1)
-
 
     """ Private method to check that a Dot object has valid necessary values.
         It is automatically called in Dot.__init__ which means you should never
@@ -99,7 +95,6 @@ class Dot:
         if self.include.__len__() < 1:
             raise KeyError("No config file to include for " + self.name)
 
-
     """ Return true if a file/directory's path contains an excluded expression.
         This function doesn't check if the file exists, is valid, or anything like that.
         It just checks the path string.
@@ -109,7 +104,6 @@ class Dot:
             fnmatch.fnmatchcase(path, "**" + exclude + "**")
             for exclude in self.exclude
         )
-
 
     """ Take an element from a Dot's includes, and find its absolute path on the working host.
         If the file or directory doesn't exists, a ValueError is raised.
@@ -121,7 +115,6 @@ class Dot:
         if not os.path.exists(path):
             raise FileNotFoundError
         return path
-
 
     """ Populate a Dot object's .files property.
         """

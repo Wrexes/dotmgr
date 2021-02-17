@@ -11,8 +11,8 @@ dotmgr: A flexible dotfile manager
 
 Usage:
   dotmgr list [supported | installed | saved]
-  dotmgr save [<user>] (all | app) [<name>] [-f | --force] [--nolink] [--noload]
-  dotmgr load [<user>] (all | app) [<name>] [-f | --force] [--nolink]
+  dotmgr save [<app>] [<name>] [<user>] [-f | --force] [--nolink] [--noload]
+  dotmgr load [<app>] [<name>] [<user>] [-f | --force] [--nolink]
 
 Options:
   -h --help    Show this screen.
@@ -20,6 +20,20 @@ Options:
   -f, --force  Override existing configurations.
   --noload     Don't load the saved configuration.
   --nolink     Prefer copying files instead of using symlinks.
+
+Commands:
+  list:
+    supported  Apps that dotmgr has a dot for.
+    installed  Supported apps that is intalled on your machine.
+    saved      Configurations that you have saved.
+  save & load:
+    [<app>]    Choose which app to save the configuration of.
+               If none is given, go through the list of
+               installed apps interactively.
+    [<name>]   Name of the configuration.
+               Default: "default"
+    [<user>]   "Owner" of the configuration.
+               Default: Your username
 """
 
 import docopt

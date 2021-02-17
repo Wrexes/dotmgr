@@ -19,6 +19,8 @@ xdgConfDir = defaults.xdgConfDir
 confDir = defaults.confDir
 cacheDir = defaults.cacheDir
 
+useLinks = defaults.useLinks
+
 # Create missing directories
 if not os.path.exists(xdgConfDir):
     os.mkdir(xdgConfDir)

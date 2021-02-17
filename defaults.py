@@ -19,8 +19,11 @@ else:
 # What is the user's name ?
 userName = getpass.getuser()
 
-# Default configuration directory
+# dotmgr configuration directory
 confDir = os.path.join(xdgConfDir, 'dotmgr')
 
 # Default cache directory
 cacheDir = tempfile.gettempdir()
+
+# Wheter to use symlinks or copies
+useLinks = True

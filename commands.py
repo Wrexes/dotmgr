@@ -39,7 +39,7 @@ class load:
 class save:
     """ Build the name string for a config directory """
     @staticmethod
-    def save_name(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir):
+    def save_name(dot: dot, userName=config.userName, confName="default", confDir=config.confDir):
         return userName + "-" + dot.name + "-" + confName
 
     """ Build the path string for a config directory """
@@ -47,18 +47,18 @@ class save:
     def save_path(dot: dot, userName=config.userName, confName="default", confDir=config.confDir):
         return os.path.join(confDir, save.save_name(dot, userName, confName, confDir))
 
-    """ Create a temporary directory containing a copy of the dotfiles for given dot """
+    """ Create a directory that will store the saved config """
     @staticmethod
-    def save(dot: dot, userName=config.userName, confName="default", cacheDir=config.cacheDir, override=False):
+    def save(dot: dot, userName=config.userName, confName="default", confDir=config.confDir, override=False):
         match = {}
-        cache = save.save_path(dot, userName, confName, cacheDir)
-        if override is True and os.path.exists(cache):
-            shutil.rmtree(cache)
-        os.mkdir(cache)
+        path = save.save_path(dot, userName, confName, confDir)
+        if override is True and os.path.exists(path):
+            shutil.rmtree(path)
+        os.mkdir(path)
 
-        # For every file/dir, create a copy in the cache and add where to restore it in the matching dict
+        # For every file/dir, create a copy and store what goes where
         for src in dot.include:
-            dst = os.path.join(cache, os.path.basename(src))
+            dst = os.path.join(path, os.path.basename(src))
             if os.path.isfile(tools.realpath(src)):
                 shutil.copy2(tools.realpath(src), dst)
             else:
@@ -66,7 +66,7 @@ class save:
             match[os.path.basename(src)] = src
 
         # Clean up ignored files and directories
-        for root, dirs, files in os.walk(cache):
+        for root, dirs, files in os.walk(path):
             if dot.is_excluded(root):
                 shutil.rmtree(root)
             for f in files:
@@ -74,5 +74,6 @@ class save:
                     os.remove(f)
 
         # Create a JSON matching file
-        with open(os.path.join(cache, "_dotmatch.json"), mode='wt') as f:
+        # It's basically just a list of "element" : "goes here"
+        with open(os.path.join(path, "_dotmatch.json"), mode='wt') as f:
             json.dump(match, f, sort_keys=True)

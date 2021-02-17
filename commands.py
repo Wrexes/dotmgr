@@ -38,8 +38,8 @@ class save:
     """ Build the path string for a config directory
         """
     @staticmethod
-    def path(dot: dot, userName=config.userName, confName="default", confDir=config.confDir):
-        return os.path.join(confDir, save.name(dot, userName, confName, confDir))
+    def path(dot: dot, userName=config.userName, confName="default", savePath=config.savePath):
+        return os.path.join(savePath, save.name(dot, userName, confName))
 
     """ Create a directory that will store the saved config
         """

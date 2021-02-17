@@ -75,9 +75,10 @@ class Dot:
     def from_json(cls, json_file: str):
         try:
             with open(json_file, "r") as jf:
-                return cls.from_json_string(jf.read())
+                jsonString = jf.read()
+            return cls.from_json_string(jsonString)
         except json.JSONDecodeError as e:
-            tools.eprint("Error while parsing file <" + jf.name + ">: ")
+            tools.eprint("Error while parsing " + jf.name + ":\n" + e.msg)
             exit(1)
 
 
@@ -167,8 +168,14 @@ def supported(confd: str = config.confDir) -> dict[Dot]:
     Keys are the names of the apps.
     """
 def installed(confd: str = config.confDir) -> dict[Dot]:
-    dots = supported(confd)
-    for dot in dots:
-        if shutil.which(dot.command) is None:
-            del dot
+    dots = {}
+    for f in wildcard(os.path.join(confd, "dots", "*.json")):
+        try:
+            with open(f, "r") as jf:
+                jsonDict = json.load(jf)
+        except:
+            continue
+        if shutil.which(jsonDict["Command"]) is None:
+            continue
+        dots[jsonDict["Name"]] = Dot(**jsonDict)
     return dots

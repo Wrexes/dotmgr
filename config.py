@@ -18,7 +18,6 @@ userName = defaults.userName
 xdgConfDir = defaults.xdgConfDir
 confDir = defaults.confDir
 saveDir = defaults.saveDir
-savePath = defaults.savePath
 
 useLinks = defaults.useLinks
 
@@ -27,5 +26,5 @@ if not os.path.exists(xdgConfDir):
     os.mkdir(xdgConfDir)
 if not os.path.exists(confDir):
     os.mkdir(confDir)
-if not os.path.exists(savePath):
-    os.mkdir(savePath)
+if not os.path.exists(saveDir):
+    os.mkdir(saveDir)

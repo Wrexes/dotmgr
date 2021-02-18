@@ -11,7 +11,7 @@ import shutil
 import json
 from pprint import pprint
 
-import dot
+import dotinfo
 import tools
 import config
 import tarfile
@@ -20,11 +20,11 @@ class list:
 
     @staticmethod
     def supported():
-        pprint(dot.supported().keys())
+        pprint(dotinfo.supported().keys())
 
     @staticmethod
     def installed():
-        pprint(dot.installed().keys())
+        pprint(dotinfo.installed().keys())
 
 
 class save:
@@ -32,21 +32,21 @@ class save:
     """ Build the name string for a config directory
         """
     @staticmethod
-    def name(dot: dot, userName=config.userName, confName="default"):
+    def name(dot: dotinfo, userName=config.userName, confName="default"):
         return userName + "-" + dot.name + "-" + confName
 
     """ Build the path string for a config directory
         """
     @staticmethod
-    def path(dot: dot, userName=config.userName, confName="default", savePath=config.savePath):
-        return os.path.join(savePath, save.name(dot, userName, confName))
+    def path(dot: dotinfo, userName=config.userName, confName="default", saveDir=config.saveDir):
+        return os.path.join(saveDir, save.name(dot, userName, confName))
 
     """ Create a directory that will store the saved config
         """
     @staticmethod
-    def save(dot: dot, userName=config.userName, confName="default", savePath=config.savePath, overwrite=False):
+    def save(dot: dotinfo, userName=config.userName, confName="default", saveDir=config.saveDir, overwrite=False):
         match = {}
-        path = save.path(dot, userName, confName, savePath)
+        path = save.path(dot, userName, confName, saveDir)
         # Check if the directory exists
         if os.path.exists(path):
             # If not, ask the user what to do

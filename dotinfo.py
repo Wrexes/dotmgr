@@ -17,14 +17,14 @@ import tools
 import config
 
 
-class Dot:
+class DotInfo:
     """ Contains all the necessary information for backing up a software's dotfiles
 
-        Dot.name: Application name.
-        Dot.command: Shell command that can be used with `which` to check for an app's presence.
-        Dot.include: Files to include in the backup. Supports environment variables and user (~) expansion.
-        Dot.exclude: Files to exclude from the backup. Supports UNIX style globbing (think gitignore).
-        Dot.files: Set of tuples containing (directory, file) for each config to save.
+        name:    Application name.
+        command: Shell command called with `which` to check for an app's presence.
+        include: Files to include in the backup. Supports string interpolation.
+        exclude: Files to exclude from the backup. Supports UNIX style globbing (think gitignore).
+        files:   Set of tuples containing (directory, file) for each config to save.
         """
 
     def __init__(self, Name: str = None, Command: str = None, Include: list[str] = [], Exclude: list[str] = []):
@@ -145,23 +145,23 @@ class Dot:
         return self.files
 
 
-def supported(confd: str = config.confDir) -> dict[Dot]:
+def supported(confd: str = config.confDir) -> dict[DotInfo]:
     """ Return a dictionary of supported apps.
         Keys are the names of the apps.
         """
     dots = {}
-    for f in wildcard(os.path.join(confd, "dots", "*.json")):
-        dot = Dot.from_json(f)
+    for f in wildcard(os.path.join(confd, "dotinfo", "*.dotinfo")):
+        dot = DotInfo.from_json(f)
         dots[dot.name] = dot
     return dots
 
 
-def installed(confd: str = config.confDir) -> dict[Dot]:
+def installed(confd: str = config.confDir) -> dict[DotInfo]:
     """ Return a dictionary of installed apps.
         Keys are the names of the apps.
         """
     dots = {}
-    for f in wildcard(os.path.join(confd, "dots", "*.json")):
+    for f in wildcard(os.path.join(confd, "dotinfo", "*.dotinfo")):
         try:
             with open(f, "r") as jf:
                 jsonDict = json.load(jf)
@@ -170,5 +170,5 @@ def installed(confd: str = config.confDir) -> dict[Dot]:
             continue
         if shutil.which(jsonDict["Command"]) is None:
             continue
-        dots[jsonDict["Name"]] = Dot(**jsonDict)
+        dots[jsonDict["Name"]] = DotInfo(**jsonDict)
     return dots

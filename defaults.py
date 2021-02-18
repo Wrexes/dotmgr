@@ -20,13 +20,16 @@ else:
 userName = getpass.getuser()
 
 # dotmgr configuration directory
-confDir = os.path.join(xdgConfDir, 'dotmgr')
+confDirName = 'DotManager'
+
+# DotManager config dir path
+confDir = os.path.join(xdgConfDir, confDirName)
 
 # Default save directory name
-saveDir = "saved"
+saveDirName = "saved"
 
 # Default path to store saved configs
-savePath = os.path.join(confDir, saveDir)
+saveDir = os.path.join(confDir, saveDirName)
 
 # Wheter to use symlinks or copies
 useLinks = True

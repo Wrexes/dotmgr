@@ -7,12 +7,12 @@
 # http://github.com/Wrexes
 
 """
-dotmgr: A flexible dotfile manager
+DotManager: A flexible dotfile manager
 
 Usage:
-  dotmgr list [supported | installed | saved]
-  dotmgr save [all | <app>] [<name>] [<user>] [-f | --force] [--nolink] [--noload]
-  dotmgr load [all | <app>] [<name>] [<user>] [-f | --force] [--nolink]
+  dot list [supported | installed | saved]
+  dot save [all | <app>] [<name>] [<user>] [-f | --force] [--nolink] [--noload]
+  dot load [all | <app>] [<name>] [<user>] [-f | --force] [--nolink]
 
 Options:
   -h --help    Show this screen.
@@ -23,7 +23,7 @@ Options:
 
 Commands:
   list:
-    supported  Apps that dotmgr has a dot for.
+    supported  Apps that DotManager has a dotinfo for.
     installed  Supported apps that is intalled on your machine.
     saved      Configurations that you have saved.
 
@@ -46,7 +46,7 @@ import docopt
 import commands
 import config
 import tools
-import dot
+import dotinfo
 
 
 argv = docopt.docopt(__doc__, version='0.0.0')
@@ -65,7 +65,7 @@ def main(argv):
             # return
 
     if argv["save"]:
-        dots = dot.installed()
+        dots = dotinfo.installed()
         params = {"overwrite": argv["--force"]}
         if argv["<user>"]:
             params["userName"] = argv["<user>"]

@@ -23,15 +23,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import json
-import re
-import shutil
 import os
+import re
+import json
+import shutil
 import fnmatch
 from glob import glob as wildcard
 
-import tools
-import config
+try:
+    import tools
+    import config
+except:
+    import DotManager.tools as tools
+    import DotManager.config as config
 
 
 class DotInfo:

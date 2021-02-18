@@ -60,13 +60,21 @@ Commands:
 
 import docopt
 
-import tools
-import config
-import dotinfo
-import commands
+try:
+    import tools
+    import config
+    import dotinfo
+    import commands
+    from defaults import version
+except ImportError:
+    import DotManager.tools as tools
+    import DotManager.config as config
+    import DotManager.dotinfo as dotinfo
+    import DotManager.commands as commands
+    from DotManager.defaults import version
 
 
-argv = docopt.docopt(__doc__, version='0.0.0')
+argv = docopt.docopt(__doc__, version=version)
 
 
 def main(argv):
@@ -122,6 +130,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    print(__doc__)
-    return
     main(argv)

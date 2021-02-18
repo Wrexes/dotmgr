@@ -56,7 +56,7 @@ setup(
     packages=["DotManager"],
     # package_dir={"DotManager": "DotManager"},
     # package_data={"DotManager": ["DotManager/dotinfo/*.dotinfo"]}
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=["docopt"],
     scripts=["dot"]
 )

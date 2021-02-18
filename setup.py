@@ -55,7 +55,7 @@ setup(
     include_package_data=True,
     packages=["DotManager"],
     # package_dir={"DotManager": "DotManager"},
-    # package_data={"DotManager": ["DotManager/dotinfo/*.dotinfo"]}
+    package_data={"DotManager": ["dotinfo/*.dotinfo"]},
     python_requires=">=3.7",
     install_requires=["docopt"],
     scripts=["dot"]

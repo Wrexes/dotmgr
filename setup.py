@@ -51,7 +51,7 @@ setup(
         "Topic :: Utilities",
         "Typing :: Typed",
     ],
-    lincese="MIT"
+    lincese="MIT",
     include_package_data=True,
     # packages=["DotManager"],
     # package_dir={"DotManager": "DotManager"},

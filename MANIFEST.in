@@ -1,1 +1,1 @@
-include dotinfo
+include dotinfo/*.dotinfo

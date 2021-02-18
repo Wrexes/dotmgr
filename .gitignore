@@ -143,5 +143,8 @@ cython_debug/
 
 # Vim stuff
 .vim
+
+# Misc
 .token
 files.txt
+README-notes.txt

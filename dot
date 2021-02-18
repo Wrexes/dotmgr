@@ -35,7 +35,6 @@ Options:
   -h --help    Show this screen.
   --version    Show version.
   -f, --force  Overwrite existing configurations.
-  --noload     Don't load the saved configuration.
   --nolink     Prefer copying files instead of using symlinks.
 
 Commands:

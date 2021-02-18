@@ -28,7 +28,7 @@ DotManager: A flexible dotfile manager
 
 Usage:
   dot list [supported | installed | saved]
-  dot save [all | <app>] [<name>] [<user>] [-f | --force] [--nolink] [--noload]
+  dot save [all | <app>] [<name>] [<user>] [-f | --force] [--nolink]
   dot load [all | <app>] [<name>] [<user>] [-f | --force] [--nolink]
 
 Options:
@@ -90,7 +90,7 @@ def main(argv):
         if argv["<name>"]:
             params["confName"]
 
-        # Single app selected
+        # Single app
         if argv["<app>"]:
             if argv["<app>"] not in dots.keys():
                 tools.eprint("App not found: " + argv["<app>"] + "\n" +
@@ -101,6 +101,7 @@ def main(argv):
             return
 
         # All apps
+        # TODO: Make menus (something like `yay`'s)
         elif argv["all"]:
             for item in dots.values():
                 print("Found supported app: " + item.name)

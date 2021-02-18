@@ -33,6 +33,7 @@ import DotManager.tools as tools
 import DotManager.config as config
 import DotManager.dotinfo as dotinfo
 
+
 class list:
 
     @staticmethod
@@ -46,42 +47,57 @@ class list:
 
 class save:
 
-    """ Build the name string for a config directory
-        """
     @staticmethod
     def name(dot: dotinfo, userName=config.userName, confName="default"):
+        """ Build the name string for a config directory
+            """
         return userName + "-" + dot.name + "-" + confName
 
-    """ Build the path string for a config directory
-        """
     @staticmethod
-    def path(dot: dotinfo, userName=config.userName, confName="default", saveDir=config.saveDir):
+    def path(dot: dotinfo,
+             userName=config.userName,
+             confName="default",
+             saveDir=config.saveDir):
+        """ Build the path string for a config directory
+            """
         return os.path.join(saveDir, save.name(dot, userName, confName))
 
-    """ Create a directory that will store the saved config
-        """
     @staticmethod
-    def save(dot: dotinfo, userName=config.userName, confName="default", saveDir=config.saveDir, overwrite=False):
+    def save(dot: dotinfo,
+             userName=config.userName,
+             confName="default",
+             saveDir=config.saveDir,
+             overwrite=False):
+        """ Create a directory that will store the saved config
+            """
         match = {}
         path = save.path(dot, userName, confName, saveDir)
+
         # Check if the directory exists
         if os.path.exists(path):
             # If not, ask the user what to do
             while not overwrite:
-                answer = 'x' + str(input(dot.name + " config \"" + confName + "\" already exists for " + userName + ". Overwrite it ? (y/N) ")).lower()
+                answer = 'x' + str(input(
+                    dot.name + " config \"" + confName + "\" already exists for " + userName + ".\n"
+                    + "Overwrite it ? (y/N) ")
+                ).lower()
                 if answer == 'y':
                     overwrite = True
                 elif answer in ['x', 'xn']:
-                    break;
+                    break
                 else:
                     continue
+
             # Keep going or stop here
             if overwrite:
                 shutil.rmtree(path)
             else:
-                print("Skipping " + userName + "'s configuration \"" + confName + "\" for " + dot.name + ".")
+                print("Skipping " + userName + "'s configuration \"" +
+                      confName + "\" for " + dot.name + ".")
                 return
+
         os.mkdir(path)
+
         # For every file/dir, create a copy and store what goes where
         for src in dot.include:
             dst = os.path.join(path, os.path.basename(src))
@@ -90,6 +106,7 @@ class save:
             else:
                 shutil.copytree(tools.realpath(src), dst)
             match[os.path.basename(src)] = src
+
         # Clean up ignored files and directories
         for root, dirs, files in os.walk(path):
             if dot.is_excluded(root):
@@ -97,6 +114,7 @@ class save:
             for f in files:
                 if dot.is_excluded(f):
                     os.remove(f)
+
         # Create a JSON matching file
         # It's basically just a list of "element" : "goes here"
         with open(os.path.join(path, "_dotmatch.json"), mode='wt') as f:

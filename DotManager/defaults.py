@@ -28,7 +28,7 @@ import getpass
 import tempfile
 
 # DotManager version
-version = '0.1.1a0'
+version = '0.1.2'
 
 # Set the base directory for config files
 if "XDG_USER_CONFIG_DIR" in os.environ:

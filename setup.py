@@ -51,11 +51,12 @@ setup(
         "Topic :: Utilities",
         "Typing :: Typed",
     ],
-    lincese="MIT",
+    license="MIT",
     include_package_data=True,
-    # packages=["DotManager"],
+    packages=["DotManager"],
     # package_dir={"DotManager": "DotManager"},
     # package_data={"DotManager": ["DotManager/dotinfo/*.dotinfo"]}
+    python_requires=">=3.6",
     install_requires=["docopt"],
-    scripts=["DotManager/dot"]
+    scripts=["dot"]
 )

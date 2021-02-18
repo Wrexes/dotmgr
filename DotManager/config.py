@@ -27,10 +27,7 @@ import os
 import getpass
 from glob import glob as wildcard
 
-try:
-    import defaults
-except ImportError:
-    import DotManager.defaults as defaults
+import DotManager.defaults as defaults
 
 userName = defaults.userName
 

@@ -29,14 +29,9 @@ import shutil
 import tarfile
 from pprint import pprint
 
-try:
-    import tools
-    import config
-    import dotinfo
-except ImportError:
-    import DotManager.tools as tools
-    import DotManager.config as config
-    import DotManager.dotinfo as dotinfo
+import DotManager.tools as tools
+import DotManager.config as config
+import DotManager.dotinfo as dotinfo
 
 class list:
 

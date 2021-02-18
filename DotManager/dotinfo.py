@@ -30,12 +30,8 @@ import shutil
 import fnmatch
 from glob import glob as wildcard
 
-try:
-    import tools
-    import config
-except:
-    import DotManager.tools as tools
-    import DotManager.config as config
+import DotManager.tools as tools
+import DotManager.config as config
 
 
 class DotInfo:

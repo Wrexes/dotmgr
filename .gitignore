@@ -144,3 +144,4 @@ cython_debug/
 # Vim stuff
 .vim
 .token
+files.txt

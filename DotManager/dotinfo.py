@@ -29,6 +29,8 @@ import json
 import shutil
 import fnmatch
 from glob import glob as wildcard
+from importlib.resources import as_file
+from importlib.resources import files as data
 
 import DotManager.tools as tools
 import DotManager.config as config
@@ -167,9 +169,12 @@ def supported(confd: str = config.confDir) -> dict[DotInfo]:
         Keys are the names of the apps.
         """
     dots = {}
-    for f in wildcard(os.path.join(confd, "dotinfo", "*.dotinfo")):
-        dot = DotInfo.from_json(f)
-        dots[dot.name] = dot
+    with as_file(data("DotManager").joinpath("dotinfo")) as path:
+        # TODO: Try making my own context manager for this
+        #       It's probably more elegant, if it is possible
+        for f in wildcard(os.path.join(path, "*.dotinfo")):
+            dot = DotInfo.from_json(f)
+            dots[dot.name] = dot
     return dots
 
 
@@ -178,14 +183,17 @@ def installed(confd: str = config.confDir) -> dict[DotInfo]:
         Keys are the names of the apps.
         """
     dots = {}
-    for f in wildcard(os.path.join(confd, "dotinfo", "*.dotinfo")):
-        try:
-            with open(f, "r") as jf:
-                jsonDict = json.load(jf)
-        # TODO: Proper exception handling
-        except:
-            continue
-        if shutil.which(jsonDict["Command"]) is None:
-            continue
-        dots[jsonDict["Name"]] = DotInfo(**jsonDict)
+    with as_file(data("DotManager").joinpath("dotinfo")) as path:
+        # TODO: Try making my own context manager for this
+        #       It's probably more elegant, if it is possible
+        for f in wildcard(os.path.join(path, "*.dotinfo")):
+            try:
+                with open(f, "r") as jf:
+                    jsonDict = json.load(jf)
+            except:
+                # TODO: Proper exception handling
+                continue
+            if shutil.which(jsonDict["Command"]) is None:
+                continue
+            dots[jsonDict["Name"]] = DotInfo(**jsonDict)
     return dots

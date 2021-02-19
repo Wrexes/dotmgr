@@ -1,6 +1,3 @@
-#! /usr/bin/env python3
-# -*- coding: utf-8 -*-
-# vim:fenc=utf-8
 # MIT License
 
 # Copyright (c) 2020 Ludovic Fernandez
@@ -22,39 +19,3 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-import os
-import getpass
-from glob import glob as wildcard
-
-import DotManager.defaults as defaults
-
-userName = defaults.userName
-""" The user's name, duh. """
-
-xdgConfDir = defaults.xdgConfDir
-""" User's config home, usually `~/.config`. """
-
-confDir = defaults.confDir
-""" DotManager cofig home, default: `~/.config/DotManager`. """
-
-saveDir = defaults.saveDir
-""" Location where saved configs are stored. """
-
-useLinks = defaults.useLinks
-""" Whether to use hard copies or symlinks when loading.
-
-    Symlinks are recommended, as they will allow editing the config
-    without having to save it again.
-    """
-
-index = confDir.joinpath("index.json")
-""" Location of the index. """
-
-# Create missing directories
-if not xdgConfDir.exists():
-    xdgConfDir.mkdir()
-if not confDir.exists():
-    confDir.mkdir()
-if not saveDir.exists():
-    saveDir.mkdir()

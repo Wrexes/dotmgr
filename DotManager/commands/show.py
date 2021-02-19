@@ -23,38 +23,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
-import getpass
-from glob import glob as wildcard
+from pprint import pprint
 
-import DotManager.defaults as defaults
+import DotManager.dotinfo as dotinfo
+import DotManager.config as config
 
-userName = defaults.userName
-""" The user's name, duh. """
+class show:
+    @staticmethod
+    def supported():
+        pprint(dotinfo.supported().keys())
 
-xdgConfDir = defaults.xdgConfDir
-""" User's config home, usually `~/.config`. """
+    @staticmethod
+    def installed():
+        pprint(dotinfo.installed().keys())
 
-confDir = defaults.confDir
-""" DotManager cofig home, default: `~/.config/DotManager`. """
-
-saveDir = defaults.saveDir
-""" Location where saved configs are stored. """
-
-useLinks = defaults.useLinks
-""" Whether to use hard copies or symlinks when loading.
-
-    Symlinks are recommended, as they will allow editing the config
-    without having to save it again.
-    """
-
-index = confDir.joinpath("index.json")
-""" Location of the index. """
-
-# Create missing directories
-if not xdgConfDir.exists():
-    xdgConfDir.mkdir()
-if not confDir.exists():
-    confDir.mkdir()
-if not saveDir.exists():
-    saveDir.mkdir()
+    @staticmethod
+    def saved():
+        with index.open('rt') as index:
+            pprint(json.load(index), indent=4)

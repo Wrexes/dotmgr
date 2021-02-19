@@ -29,7 +29,7 @@
 DotManager: A flexible dotfile manager
 
 Usage:
-  dot list [supported | installed | saved]
+  dot show [supported | installed | saved]
   dot save [all | <app>] [<name>] [<user>] [-f | --force] [--nolink]
   dot load [all | <app>] [<name>] [<user>] [-f | --force] [--nolink]
 
@@ -40,7 +40,7 @@ Options:
   --nolink      Prefer copying files instead of using symlinks.
 
 Commands:
-  list:
+  show:
     supported  Apps that DotManager has a dotinfo for.
     installed  Supported apps that is intalled on your machine.
     saved      Configurations that you have saved.
@@ -64,30 +64,29 @@ import docopt
 import DotManager.tools as tools
 import DotManager.config as config
 import DotManager.dotinfo as dotinfo
-import DotManager.commands as commands
+from DotManager.commands.save import save
+from DotManager.commands.show import show
 from DotManager.defaults import version
-
 
 argv = docopt.docopt(__doc__, version=version)
 
 
 def main(argv):
-    if argv["list"]:
+    if argv["show"]:
         if argv["supported"]:
-            commands.list.supported()
+            show.supported()
             return
         if argv["installed"]:
-            commands.list.installed()
+            show.installed()
             return
         if argv["saved"]:
             print("I'm sorry, this feature is not yet available.")
+            # show.saved()
             return
-            # commands.list.saved()
-            # return
 
     if argv["save"]:
         dots = dotinfo.installed()
-        params = {"overwrite": argv["--force"]}
+        params = {"force": argv["--force"]}
         if argv["<user>"]:
             params["userName"] = argv["<user>"]
         if argv["<name>"]:
@@ -100,7 +99,7 @@ def main(argv):
                              "Please use the `list` command to make sure it is supported and installed.")
                 exit(1)
             params["dot"] = dots[argv["<app>"]]
-            commands.save.save(**params)
+            save(**params)
             return
 
         # All apps
@@ -109,7 +108,8 @@ def main(argv):
             for item in dots.values():
                 print("Found supported app: " + item.name)
                 params["dot"] = item
-                commands.save.save(**params)
+                save(**params)
+            return
 
         # Interactive
         # TODO: Make menus (something like `yay`'s)
@@ -120,7 +120,7 @@ def main(argv):
                     break
                 elif answer in ['xy', 'x']:
                     params["dot"] = item
-                    commands.save.save(**params)
+                    save(**params)
                     break
                 else:
                     continue

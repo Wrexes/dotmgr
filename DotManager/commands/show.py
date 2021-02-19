@@ -23,21 +23,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
-import json
-import shutil
-import tarfile
-import json
-from pathlib import Path
 from pprint import pprint
 
-import DotManager.tools as tools
-import DotManager.config as config
 import DotManager.dotinfo as dotinfo
+import DotManager.config as config
 
-
-class list:
-
+class show:
     @staticmethod
     def supported():
         pprint(dotinfo.supported().keys())
@@ -45,3 +36,8 @@ class list:
     @staticmethod
     def installed():
         pprint(dotinfo.installed().keys())
+
+    @staticmethod
+    def saved():
+        with index.open('rt') as index:
+            pprint(json.load(index), indent=4)

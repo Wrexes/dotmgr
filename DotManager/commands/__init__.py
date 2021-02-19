@@ -1,6 +1,3 @@
-#! /usr/bin/env python3
-# -*- coding: utf-8 -*-
-# vim:fenc=utf-8
 # MIT License
 
 # Copyright (c) 2020 Ludovic Fernandez
@@ -23,25 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
-import json
-import shutil
-import tarfile
-import json
-from pathlib import Path
-from pprint import pprint
-
-import DotManager.tools as tools
 import DotManager.config as config
-import DotManager.dotinfo as dotinfo
 
-
-class list:
-
-    @staticmethod
-    def supported():
-        pprint(dotinfo.supported().keys())
-
-    @staticmethod
-    def installed():
-        pprint(dotinfo.installed().keys())
+path = config.confDir.joinpath("confs.json")

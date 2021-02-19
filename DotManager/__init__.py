@@ -30,4 +30,11 @@
     If not, then I *really* wonder why you keep reading.
     Alright. I'm out of ideas... for now.
     See ya !
+
+    Hello again. I had a great day today. I've improved the performance
+    of my code as well as its readability, but I've been struggling with
+    finding an efficient way to merge two JSON files in order to update
+    one with the other, without overwriting its keys and with skipping
+    those that already exist and have nothing changed about them.
+    Alright. That's enough fooling around. Back to it !
     """

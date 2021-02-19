@@ -23,6 +23,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+#TODO: Implement verbosity
+  # -v --verbose  Show what's being done.
 """
 DotManager: A flexible dotfile manager
 
@@ -32,10 +34,10 @@ Usage:
   dot load [all | <app>] [<name>] [<user>] [-f | --force] [--nolink]
 
 Options:
-  -h --help    Show this screen.
-  --version    Show version.
-  -f, --force  Overwrite existing configurations.
-  --nolink     Prefer copying files instead of using symlinks.
+  -h --help     Show this message and exit.
+  -V --version  Show version.
+  -f --force    Overwrite existing configurations.
+  --nolink      Prefer copying files instead of using symlinks.
 
 Commands:
   list:

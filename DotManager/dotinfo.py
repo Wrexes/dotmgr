@@ -51,7 +51,6 @@ class DotInfo:
         self.command = Command
         self.include = sorted([f.rstrip('/') for f in Include])
         self.exclude = sorted([f.rstrip('/') for f in Exclude])
-        # TODO: Transform files into a property
         self.files = None
         self.__validate()
 
@@ -100,17 +99,17 @@ class DotInfo:
             It is automatically called in Dot.__init__ which means you should never
             have to use it yourself.
             """
-        reval = "^[a-zA-Z0-9_][a-zA-Z0-9_i\-]+$"
+        regex = "^[a-zA-Z0-9_][a-zA-Z0-9_i\-]+$"
         if self.name is None:
             raise KeyError("Missing name property.")
-        if re.fullmatch(reval, self.name) is None:
+        if re.fullmatch(regex, self.name) is None:
             raise KeyError("Invalid name: " + self.name +
-                           ".\nMust match this regex: " + reval)
+                           ".\nMust match this regex: " + regex)
         if self.command is None:
             raise KeyError("Missing command property.")
-        if re.fullmatch(reval, self.command) is None:
+        if re.fullmatch(regex, self.command) is None:
             raise NameError("Invalid command: " + self.command +
-                            " must match this regex: " + reval)
+                            " must match this regex: " + regex)
         if self.include.__len__() < 1:
             raise KeyError("No config file to include for " + self.name)
 

@@ -23,8 +23,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-#TODO: Implement verbosity
-  # -v --verbose  Show what's being done.
+# TODO: Implement verbosity
+# -v --verbose  Show what's being done.
 """
 DotManager: A flexible dotfile manager
 
@@ -70,7 +70,7 @@ from DotManager.commands.save import save
 from DotManager.commands.show import show
 from DotManager.defaults import version
 
-argv = docopt.docopt(__doc__, version=version)
+argv: dict = docopt.docopt(__doc__, version=version)
 
 
 def main(argv):
@@ -86,9 +86,11 @@ def main(argv):
             # show.saved()
             return
 
+    # This influences any other command
+    params = {"force": argv["--force"]}
+
     if argv["save"]:
-        dots = dotinfo.installed()
-        params = {"force": argv["--force"]}
+        dots: dict[dotinfo] = dotinfo.installed()
         if argv["<user>"]:
             params["userName"] = argv["<user>"]
         if argv["<name>"]:

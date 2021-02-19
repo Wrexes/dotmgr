@@ -89,7 +89,6 @@ class DotInfo:
             with open(jsonFile, "r") as jf:
                 jsonString = jf.read()
             return cls.from_json_string(jsonString)
-        # TODO: Proper exception handling
         except json.JSONDecodeError as e:
             tools.eprint("Error while parsing " + jf.name + ":\n" + e.msg)
             exit(1)

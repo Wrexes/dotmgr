@@ -26,30 +26,33 @@
 import os
 import getpass
 import tempfile
+from pathlib import Path
 
 # DotManager version
-version = '0.1.4'
+version = '0.2.0'
 
 # Set the base directory for config files
-if "XDG_USER_CONFIG_DIR" in os.environ:
-    xdgConfDir = os.path.expandvars('$XDG_USER_CONFIG_DIR')
+if "XDG_CONFIG_HOME" in os.environ:
+    xdgConfDir = Path(os.environ.get("XDG_CONFIG_HOME"))
+elif "XDG_USER_CONFIG_DIR" in os.environ:
+    xdgConfDir = Path(os.environ.get("XDG_USER_CONFIG_DIR"))
 else:
-    xdgConfDir = os.path.expanduser('~/.config')
+    xdgConfDir = Path(os.path.expanduser('~/.config'))
 
 # What is the user's name ?
-userName = getpass.getuser()
+userName = str(getpass.getuser())
 
 # dotmgr configuration directory
-confDirName = 'DotManager'
+confDirName = Path('DotManager')
 
 # DotManager config dir path
-confDir = os.path.join(xdgConfDir, confDirName)
+confDir = Path(xdgConfDir, confDirName)
 
 # Default save directory name
-saveDirName = "saved"
+saveDirName = Path("saved")
 
 # Default path to store saved configs
-saveDir = os.path.join(confDir, saveDirName)
+saveDir = Path(confDir, saveDirName)
 
 # Wheter to use symlinks or copies
 useLinks = True

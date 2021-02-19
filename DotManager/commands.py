@@ -27,6 +27,7 @@ import os
 import json
 import shutil
 import tarfile
+from pathlib import Path
 from pprint import pprint
 
 import DotManager.tools as tools
@@ -46,24 +47,27 @@ class list:
 
 
 class save:
-
     @staticmethod
-    def name(dot: dotinfo, userName=config.userName, confName="default"):
+    def name(dot: dotinfo,
+             userName=config.userName,
+             confName="default") -> Path:
         """ Build the name string for a config directory
             """
-        return userName + "-" + dot.name + "-" + confName
+        return Path(userName + "-" + dot.name + "-" + confName)
 
-    @staticmethod
-    def path(dot: dotinfo,
+    @classmethod
+    def path(cls,
+             dot: dotinfo,
              userName=config.userName,
              confName="default",
-             saveDir=config.saveDir):
+             saveDir=config.saveDir) -> Path:
         """ Build the path string for a config directory
             """
-        return os.path.join(saveDir, save.name(dot, userName, confName))
+        return Path(saveDir) / cls.name(dot, userName, confName)
 
-    @staticmethod
-    def save(dot: dotinfo,
+    @classmethod
+    def save(cls,
+             dot: dotinfo,
              userName=config.userName,
              confName="default",
              saveDir=config.saveDir,
@@ -71,51 +75,56 @@ class save:
         """ Create a directory that will store the saved config
             """
         match = {}
-        path = save.path(dot, userName, confName, saveDir)
-
-        # Check if the directory exists
-        if os.path.exists(path):
-            # If not, ask the user what to do
+        destination = cls.path(dot, userName, confName, saveDir)
+        try:
+            destination.mkdir(parents=True)
+        except FileExistsError:
             while not overwrite:
-                answer = 'x' + str(input(
-                    dot.name + " config \"" + confName + "\" already exists for " + userName + ".\n"
-                    + "Overwrite it ? (y/N) ")
-                ).lower()
-                if answer == 'y':
-                    overwrite = True
-                elif answer in ['x', 'xn']:
+                print(dot.name + " config \"" + confName +
+                      "\" already exists for " + userName + ".")
+                answer = 'x' + str(input("Overwrite it ? (y/N) ")).lower()
+                if answer in ['x', 'xn', 'xno']:
+                    print(
+                        "Skipping " + userName + "'s configuration \"" + confName + "\" for " + dot.name + ".")
+                    return
+                elif answer in ['xy', 'xyes']:
                     break
                 else:
                     continue
-
-            # Keep going or stop here
-            if overwrite:
-                shutil.rmtree(path)
-            else:
-                print("Skipping " + userName + "'s configuration \"" +
-                      confName + "\" for " + dot.name + ".")
-                return
-
-        os.mkdir(path)
+            shutil.rmtree(destination)
+            destination.mkdir(parents=True)
 
         # For every file/dir, create a copy and store what goes where
-        for src in dot.include:
-            dst = os.path.join(path, os.path.basename(src))
-            if os.path.isfile(tools.realpath(src)):
-                shutil.copy2(tools.realpath(src), dst)
+        for inc in dot.include:
+            src = Path(tools.realpath(inc))
+            dst = destination / src.name
+            if not src.exists() or dst.exists():
+                continue
+            if src.is_file():
+                shutil.copy2(src, dst)
             else:
-                shutil.copytree(tools.realpath(src), dst)
-            match[os.path.basename(src)] = src
+                shutil.copytree(src, dst)
+            match[src.name] = inc
 
         # Clean up ignored files and directories
-        for root, dirs, files in os.walk(path):
-            if dot.is_excluded(root):
-                shutil.rmtree(root)
-            for f in files:
-                if dot.is_excluded(f):
-                    os.remove(f)
+        for exc in dot.exclude:
+            for item in sorted(destination.rglob(exc)):
+                if item.is_file():
+                    os.remove(item)
+                else:
+                    shutil.rmtree(item)
 
         # Create a JSON matching file
         # It's basically just a list of "element" : "goes here"
-        with open(os.path.join(path, "_dotmatch.json"), mode='wt') as f:
+        with open(os.path.join(destination, "_dotmatch.json"), mode='wt') as f:
             json.dump(match, f, sort_keys=True)
+
+        # for root, dirs, files in os.walk(destination):
+        """ I'm keeping this in case the above exclusion deletion code breaks.
+            I have a bad feeling about it for some reason. It seemed too simple.
+            """
+        # if dot.is_excluded(root):
+        # shutil.rmtree(root)
+        # for f in files:
+        # if dot.is_excluded(f):
+        # os.remove(f)

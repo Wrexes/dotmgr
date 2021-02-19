@@ -38,9 +38,9 @@ saveDir = defaults.saveDir
 useLinks = defaults.useLinks
 
 # Create missing directories
-if not os.path.exists(xdgConfDir):
-    os.mkdir(xdgConfDir)
-if not os.path.exists(confDir):
-    os.mkdir(confDir)
-if not os.path.exists(saveDir):
-    os.mkdir(saveDir)
+if not xdgConfDir.exists():
+    xdgConfDir.mkdir()
+if not confDir.exists():
+    confDir.mkdir()
+if not saveDir.exists():
+    saveDir.mkdir()

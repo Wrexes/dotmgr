@@ -23,8 +23,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import sys
 import os
+import sys
+from pathlib import Path
 
 # Print a message on stderr
 def eprint(*args, **kwargs):
@@ -34,4 +35,4 @@ def eprint(*args, **kwargs):
 def realpath(path: str) -> str:
     path = os.path.expandvars(path)
     path = os.path.expanduser(path)
-    return path
+    return Path(path)

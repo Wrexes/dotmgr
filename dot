@@ -91,7 +91,7 @@ def main(argv):
         if argv["<user>"]:
             params["userName"] = argv["<user>"]
         if argv["<name>"]:
-            params["confName"] = agrv["<name>"]
+            params["confName"] = argv["<name>"]
 
         # Single app
         if argv["<app>"]:

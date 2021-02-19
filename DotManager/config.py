@@ -29,12 +29,22 @@ from glob import glob as wildcard
 
 import DotManager.defaults as defaults
 
+""" The user's name, duh """
 userName = defaults.userName
 
+""" User's config home, usually ~/.config """
 xdgConfDir = defaults.xdgConfDir
+
+""" DotManager cofig home, default: ~/.config/DotManager """
 confDir = defaults.confDir
+
+""" Location where saved configs are stored """
 saveDir = defaults.saveDir
 
+""" Whether to use hard copies or symlinks when loading
+    Symlinks are recommended, as they will allow editing the config
+    without having to save it again.
+    """
 useLinks = defaults.useLinks
 
 # Create missing directories

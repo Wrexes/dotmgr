@@ -29,7 +29,7 @@ import tempfile
 from pathlib import Path
 
 # DotManager version
-version = '0.2.0'
+version = '0.3.0'
 
 # Set the base directory for config files
 if "XDG_CONFIG_HOME" in os.environ:

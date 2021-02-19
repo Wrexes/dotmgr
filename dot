@@ -38,6 +38,8 @@ Options:
   -V --version  Show version.
   -f --force    Overwrite existing configurations.
   --nolink      Prefer copying files instead of using symlinks.
+                Enabled by default for now... Because links are
+                not yet implemented LUL.
 
 Commands:
   show:

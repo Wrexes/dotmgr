@@ -12,6 +12,7 @@ import shutil
 from pprint import pprint
 from pathlib import Path
 
+import DotManager.index as index
 import DotManager.config as config
 import DotManager.dotinfo as dotinfo
 from DotManager.tools import realpath, eprint
@@ -42,15 +43,6 @@ class SaveInfo:
 
         # Dictionary matching what goes where
         self.match = {}
-
-        # Index entry that will be inserted in DotManager's index.json
-        self.indexEntry = {
-            userName: {
-                dot.name: [
-                    confName
-                ]
-            }
-        }
 
     def create_dir(self):
         try:
@@ -109,16 +101,12 @@ def save(dot: dotinfo,
          confName="default",
          saveDir=config.saveDir,
          force=False):
+    """ Save your config to `saveDir/userName-dot.name-confName`.
+        Also create a corresponding entry in the index.
+        """
     info = SaveInfo(dot, userName, confName, saveDir, force)
     info.create_dir()
     info.copy_conf()
     info.cleanup_exclusions()
     info.create_dotmatch()
-
-    # index = {}
-
-    # try:
-    # with config.confDir.joinpath("index.json").open(mode='rt') as jsonIndex:
-    # index = json.load(jsonIndex)
-    # except json.JSONDecodeError as e:
-    # eprint("Broken idex file !!\n" + e)
+    # index.Index().insert(userName, dot.name, confName)

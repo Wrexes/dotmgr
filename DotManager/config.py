@@ -25,6 +25,7 @@
 
 import os
 import getpass
+from pathlib import Path
 from glob import glob as wildcard
 
 import DotManager.defaults as defaults

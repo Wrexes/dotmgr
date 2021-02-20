@@ -27,6 +27,7 @@ from pprint import pprint
 
 import DotManager.dotinfo as dotinfo
 import DotManager.config as config
+from DotManager import Index
 
 class show:
     @staticmethod
@@ -39,5 +40,4 @@ class show:
 
     @staticmethod
     def saved():
-        with index.open('rt') as index:
-            pprint(json.load(index), indent=4)
+        print(Index())

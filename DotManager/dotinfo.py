@@ -73,8 +73,14 @@ class DotInfo:
         return ret.format(self=self)
 
     @classmethod
+    def from_json_dict(cls, jsonDict: dict):
+        return cls(**jsonDict)
+
+
+    @classmethod
     def from_json_string(cls, jsonString: str):
         """ Create a Dot object using a JSON file's content
+
             json_string: Buffered content of a JSON file
             """
         jsonDict = json.loads(jsonString)
@@ -83,6 +89,7 @@ class DotInfo:
     @classmethod
     def from_json(cls, jsonFile: str):
         """ Create a Dot object importing a JSON file from given path.
+
             jsonFile : Path to JSON file
             """
         try:
@@ -95,6 +102,7 @@ class DotInfo:
 
     def __validate(self):
         """ Private method to check that a Dot object has valid necessary values.
+
             It is automatically called in Dot.__init__ which means you should never
             have to use it yourself.
             """
@@ -112,8 +120,13 @@ class DotInfo:
         if self.include.__len__() < 1:
             raise KeyError("No config file to include for " + self.name)
 
+    def is_installed(self) -> bool:
+        """ Returns true if the app is installed on the user's machine. """
+        return shutil.which(self.command) is not None
+
     def is_excluded(self, path: str) -> bool:
         """ Return true if a file/directory's path contains an excluded expression.
+
             This function doesn't check if the file exists, is valid, or anything like that.
             It just checks the path string.
             """
@@ -162,15 +175,28 @@ class DotInfo:
         return self.files
 
 
+# TODO: Cleanup this code, reduce boilerplate/copypastas
 def supported(confd: str = config.confDir) -> dict[DotInfo]:
     """ Return a dictionary of supported apps.
         Keys are the names of the apps.
         """
     dots = {}
+    # TODO: Make a stack context manager
+    # TODO: Create exceptions,
+    #       Encapsulate these two loops in try blocks.
+    #       Move the error handling from the ifs in excepts.
+    for dotinfo in config.confDir.joinpath("dotinfo").glob("*.dotinfo"):
+        with open(dotinfo, 'rt') as jsonFile:
+            dot = DotInfo.from_json_string(jsonFile.read())
+            if dot.name in dots:
+                tools.eprint("Error: duplicate dotinfo for " + dot.name + ".")
+                tools.eprint("Skipping " + dotinfo)
+            dots[dot.name] = dot
+
     with as_file(data("DotManager").joinpath("dotinfo")) as path:
         # TODO: Try making my own context manager for this
         #       It's probably more elegant, if it is possible
-        for f in wildcard(os.path.join(path, "*.dotinfo")):
+        for f in path.glob( "*.dotinfo"):
             dot = DotInfo.from_json(f)
             dots[dot.name] = dot
     return dots
@@ -180,18 +206,35 @@ def installed(confd: str = config.confDir) -> dict[DotInfo]:
     """ Return a dictionary of installed apps.
         Keys are the names of the apps.
         """
+
     dots = {}
+    # TODO: Make a stack context manager
+    # TODO: Create exceptions,
+    #       Encapsulate these two loops in try blocks.
+    #       Move the error handling from the ifs in excepts.
+    for dotinfo in config.confDir.joinpath("dotinfo").glob("*.dotinfo"):
+        with open(dotinfo, 'rt') as jsonFile:
+            dot = DotInfo.from_json_string(jsonFile.read())
+            if dot.name in dots:
+                tools.eprint("Error: duplicate dotinfo for " + dot.name + ".")
+                tools.eprint("Skipping " + dotinfo)
+            if not dot.is_installed():
+                continue
+            dots[dot.name] = dot
+
     with as_file(data("DotManager").joinpath("dotinfo")) as path:
         # TODO: Try making my own context manager for this
         #       It's probably more elegant, if it is possible
-        for f in wildcard(os.path.join(path, "*.dotinfo")):
+        for f in path.glob('*.dotinfo'):
             try:
                 with open(f, "r") as jf:
                     jsonDict = json.load(jf)
-            except:
-                # TODO: Proper exception handling
+            except json.JSONDecodeError as e:
+                tools.eprint(e.with_traceback)
                 continue
             if shutil.which(jsonDict["Command"]) is None:
+                continue
+            if jsonDict["Name"] in dots:
                 continue
             dots[jsonDict["Name"]] = DotInfo(**jsonDict)
     return dots

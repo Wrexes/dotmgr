@@ -2,8 +2,8 @@
     "Name": "Vim",
     "Command": "vim",
     "Include": [
-        "$HOME/.vim/",
-        "$HOME/.vimrc"
+        "~/.vim/",
+        "~/.vimrc"
     ],
     "Exclude": [
         "plugged"

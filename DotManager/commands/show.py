@@ -25,9 +25,9 @@
 
 from pprint import pprint
 
-import DotManager.dotinfo as dotinfo
 import DotManager.config as config
-from DotManager import Index
+import DotManager.dotinfo as dotinfo
+from DotManager.index import Index
 
 class show:
     @staticmethod

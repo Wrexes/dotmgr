@@ -12,9 +12,9 @@ import shutil
 from pprint import pprint
 from pathlib import Path
 
-import DotManager.index as index
 import DotManager.config as config
 import DotManager.dotinfo as dotinfo
+from DotManager.index import index
 from DotManager.tools import realpath, eprint
 
 
@@ -109,4 +109,4 @@ def save(dot: dotinfo,
     info.copy_conf()
     info.cleanup_exclusions()
     info.create_dotmatch()
-    # index.Index().insert(userName, dot.name, confName)
+    index.insert(userName, dot.name, confName)

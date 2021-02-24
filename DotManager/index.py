@@ -23,26 +23,41 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from ast import Dict, List
+import atexit
 from pathlib import Path
+from json import dumps as to_string
 from json import load as deserialize
+from json import dump as serialize
 from json import JSONDecodeError
 
+from DotManager.tools import eprint
 from DotManager.config import index as indexPath
 
 # TODO: Check out atExit, write the index when program closes.
 #       This will reduce I/O overhead when saving/deleting
 #       Multiple configurations.
 
-class Index:
-    """ Class provided to ease insertion and lookup in the index."""
+
+class __Index:
+    """ Class provided to ease insertion and lookup in the index.
+
+        Do not use this class, just import the `index` global variable.
+        """
 
     def __init__(self):
-        with open(indexPath, 'rt') as jsonIndex:
-            self._dict = dict(deserialize(jsonIndex))
+        try:
+            with open(indexPath, 'rt') as jsonIndex:
+                self._dict = deserialize(jsonIndex)
+        except FileNotFoundError:
+            self._dict = {}
+        except JSONDecodeError as e:
+            eprint("Broken index !")
+            eprint(e)
+            exit(1)
         self._apps = set()
         self._confs = set()
-        self._users = {key for key in self._dict}
+        self._users = set(self._dict)
+        # XXX: There *has* to be a way to make the following code cleaner. 🤔
         for user in self._users:
             for app in self._dict[user]:
                 self._apps.add(app)
@@ -53,6 +68,9 @@ class Index:
                         self._confs.add(conf)
                 except KeyError:
                     continue
+
+    def __str__(self):
+        return to_string(self._dict, indent=4, sort_keys=True)
 
     @property
     def __dict__(self) -> set: return self._dict.copy()
@@ -71,10 +89,35 @@ class Index:
     """ Get a set of all the users registered in the index. """
 
     def has(self, element: str):
-        """ Check if element is in the index.
+        """ Check if `element` is in the index.
             Doesn't differentiante users from confs or apps.
             """
         return (element in self._apps or element in self._confs or element in self._users)
 
+    def querry(self, user: str, app: str, conf: str):
+        """ Check if a specific config is in the index. """
+        return (user in self._users and app in self._apps and conf in self._confs)
+
     def insert(self, user, app, conf):
-        pass
+        """ Isert something in the index, and update its properties accordingly """
+        self._users.add(user)
+        self._apps.add(app)
+        self._confs.add(conf)
+        if user not in self._dict:
+            self._dict[user] = {app: [conf]}
+        elif app not in self._dict[user]:
+            self._dict[user][app] = [conf]
+        elif conf not in self._dict[user][app]:
+            self._dict[user][app].append(conf)
+
+    def update(self):
+        """ Update the index file.
+
+            This action is performed automatically when closing DotManager.
+            """
+        with open(indexPath, 'wt') as jsonIndex:
+            serialize(self._dict, jsonIndex, indent=4, sort_keys=True)
+
+
+index = __Index()
+atexit.register(index.update)

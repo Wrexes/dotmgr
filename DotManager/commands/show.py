@@ -27,7 +27,7 @@ from pprint import pprint
 
 import DotManager.config as config
 import DotManager.dotinfo as dotinfo
-from DotManager.index import Index
+from DotManager.index import index
 
 class show:
     @staticmethod
@@ -40,4 +40,4 @@ class show:
 
     @staticmethod
     def saved():
-        print(Index())
+        print(index)

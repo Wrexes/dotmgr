@@ -66,9 +66,10 @@ import docopt
 import DotManager.tools as tools
 import DotManager.config as config
 import DotManager.dotinfo as dotinfo
+from DotManager.index import index
+from DotManager.defaults import version
 from DotManager.commands.save import save
 from DotManager.commands.show import show
-from DotManager.defaults import version
 
 argv: dict = docopt.docopt(__doc__, version=version)
 
@@ -82,11 +83,10 @@ def main(argv):
             show.installed()
             return
         if argv["saved"]:
-            print("I'm sorry, this feature is not yet available.")
-            # show.saved()
+            show.saved()
             return
 
-    # This influences any other command
+    # This influences any other command so it's set now
     params = {"force": argv["--force"]}
 
     if argv["save"]:
@@ -133,7 +133,6 @@ def main(argv):
     if argv["load"]:
         print("I'm sorry, this feature is not yet available.")
         return
-
 
 if __name__ == "__main__":
     main(argv)

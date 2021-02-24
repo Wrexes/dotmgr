@@ -19,7 +19,7 @@ from DotManager.tools import realpath, eprint
 
 
 class SaveInfo:
-    def __init__(self, dot: dotinfo, userName, confName, saveDir, force):
+    def __init__(self, dot: dotinfo, userName, confName, saveDir):
         # DotInfo stuff
         self.include = dot.include
         self.exclude = dot.exclude
@@ -29,7 +29,6 @@ class SaveInfo:
         self.dotName = dot.name
         self.confName = confName
         self.saveDir = saveDir
-        self.force = force
 
         # Save destination name and location
         self.baseName = Path(userName + '-' + dot.name + '-' + confName)
@@ -45,21 +44,10 @@ class SaveInfo:
         self.match = {}
 
     def create_dir(self):
-        try:
-            self.location.mkdir(parents=True)
-        except FileExistsError:
-            while not self.force:
-                print(self._FileExists)
-                answer = 'x' + str(input("Overwrite it ? (y/N) ")).lower()
-                if answer in ['x', 'xn', 'xno']:
-                    print(self._Skip)
-                    return
-                elif answer in ['xy', 'xyes']:
-                    break
-                else:
-                    continue
+        if self.location.exists():
             shutil.rmtree(self.location)
-            self.location.mkdir(parents=True)
+        self.location.mkdir(parents=True)
+
 
     def copy_conf(self):
         for inc in self.include:
@@ -82,7 +70,7 @@ class SaveInfo:
                     shutil.rmtree(item)
 
         # for root, dirs, files in os.walk(destination):
-        """ I'm keeping this in case the above exclusion cleanuo code breaks.
+        """ I'm keeping this in case the above exclusion cleanup code breaks.
             I have a bad feeling about it for some reason. It seemed too simple.
             """
         #     if dot.is_excluded(root):
@@ -104,7 +92,19 @@ def save(dot: dotinfo,
     """ Save your config to `saveDir/userName-dot.name-confName`.
         Also create a corresponding entry in the index.
         """
-    info = SaveInfo(dot, userName, confName, saveDir, force)
+    info = SaveInfo(dot, userName, confName, saveDir)
+    if index.querry(userName, dot.name, confName):
+        while not force:
+            print(info._FileExists)
+            answer = 'x' + str(input("Overwrite it ? (y/N) ")).lower()
+            if answer in ['x', 'xn', 'xno']:
+                print(info._Skip)
+                return
+            elif answer in ['xy', 'xyes']:
+                break
+            else:
+                continue
+        shutil.rmtree(info.location)
     info.create_dir()
     info.copy_conf()
     info.cleanup_exclusions()

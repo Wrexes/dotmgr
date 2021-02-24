@@ -49,17 +49,16 @@ Commands:
     saved      Configurations that you have saved.
 
   save, load & rm:
-    [all| <app>]  Choose which app to save the configuration of.
+    [all | <app>]  Choose which app to save the configuration of.
                    - If `all`, save every installed apps' configurations.
                    - If the name of a supported app, save its configurations.
-                   - If left empty, go through the list of available
-                     choices interactively.
+                   - If left empty, go through the list interactively.
 
-    [<name>]      Name of the configuration.
-                  Default: "default"
+    [<name>]       Name of the configuration.
+                   Default: "default"
 
-    [<user>]      "Owner" of the configuration.
-                  Default: Your username
+    [<user>]       "Owner" of the configuration.
+                   Default: Your username
 """
 
 import docopt
@@ -101,7 +100,8 @@ def main(argv):
         if argv["<app>"]:
             if argv["<app>"] not in dots:
                 tools.eprint("App not found: " + argv["<app>"])
-                tools.eprint("Please use the `list` command to make sure it is supported and installed.")
+                tools.eprint(
+                    "Please use the `list` command to make sure it is supported and installed.")
                 exit(1)
             params["dot"] = dots[argv["<app>"]]
             save(**params)

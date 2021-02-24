@@ -39,7 +39,6 @@ setup(
     author_email="ludofernandez@msn.com",
     url="https://github.com/SirWrexes/DotManager",
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
         "Environment :: Console",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
@@ -54,7 +53,6 @@ setup(
     license="MIT",
     include_package_data=True,
     packages=["DotManager"],
-    # package_dir={"DotManager": "DotManager"},
     package_data={"DotManager": ["dotinfo/*.dotinfo"]},
     python_requires=">=3.7",
     install_requires=["docopt"],

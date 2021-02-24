@@ -99,9 +99,9 @@ def main(argv):
 
         # Single app
         if argv["<app>"]:
-            if argv["<app>"] not in dots.keys():
-                tools.eprint("App not found: " + argv["<app>"] + "\n" +
-                             "Please use the `list` command to make sure it is supported and installed.")
+            if argv["<app>"] not in dots:
+                tools.eprint("App not found: " + argv["<app>"])
+                tools.eprint("Please use the `list` command to make sure it is supported and installed.")
                 exit(1)
             params["dot"] = dots[argv["<app>"]]
             save(**params)
@@ -134,6 +134,11 @@ def main(argv):
     if argv["load"]:
         print("I'm sorry, this feature is not yet available.")
         return
+
+    if argv["rm"]:
+        print("I'm sorry, this feature is not yet available.")
+        return
+
 
 if __name__ == "__main__":
     main(argv)

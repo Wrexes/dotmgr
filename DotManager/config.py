@@ -49,7 +49,7 @@ useLinks: bool = defaults.useLinks
     without having to save it again.
     """
 
-index: Path = confDir.joinpath("index.json")
+indexPath: Path = confDir.joinpath("index.json")
 """ Location of the index. """
 
 # Create missing directories

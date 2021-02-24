@@ -25,13 +25,14 @@
 
 import atexit
 from pathlib import Path
+from itertools import chain
 from json import dumps as to_string
 from json import load as deserialize
 from json import dump as serialize
 from json import JSONDecodeError
 
+import DotManager.config as config
 from DotManager.tools import eprint
-from DotManager.config import index as indexPath
 
 # TODO: Check out atExit, write the index when program closes.
 #       This will reduce I/O overhead when saving/deleting
@@ -46,7 +47,7 @@ class __Index:
 
     def __init__(self):
         try:
-            with open(indexPath, 'rt') as jsonIndex:
+            with open(config.indexPath, 'rt') as jsonIndex:
                 self._dict = deserialize(jsonIndex)
         except FileNotFoundError:
             self._dict = {}
@@ -54,70 +55,101 @@ class __Index:
             eprint("Broken index !")
             eprint(e)
             exit(1)
-        self._apps = set()
-        self._confs = set()
         self._users = set(self._dict)
-        # XXX: There *has* to be a way to make the following code cleaner. 🤔
+        self._apps = []
+        for user in self._users:
+            self._apps.extend(self._dict[user])
+        self._confs = []
+        for user in self._users:
+            self._confs.extend(chain.from_iterable(self._dict[user].values()))
+
         for user in self._users:
             for app in self._dict[user]:
-                self._apps.add(app)
+                self._apps.append(app)
         for user in self._users:
             for app in self._apps:
                 try:
                     for conf in self._dict[user][app]:
-                        self._confs.add(conf)
+                        self._confs.append(conf)
                 except KeyError:
                     continue
 
     def __str__(self):
-        return to_string(self._dict, indent=4, sort_keys=True)
+        return to_string(self._dict, indent=4, sort_keys=True, ensure_ascii=False)
 
     @property
     def __dict__(self) -> set: return self._dict.copy()
     """ Get a copy on the deserialized JSON index. """
 
     @property
-    def apps(self) -> set: return self._apps.copy()
+    def apps(self) -> set: return set(self._apps)
     """ Get a set of all the apps registered in the index. """
 
     @property
-    def confs(self) -> set: return self._confs.copy()
+    def confs(self) -> set: return set(self._confs)
     """ Get a set of all the configurations names saved in the index. """
 
     @property
-    def users(self) -> set: return self._users.copy()
+    def users(self) -> set: return set(self._users)
     """ Get a set of all the users registered in the index. """
 
     def has(self, element: str):
         """ Check if `element` is in the index.
             Doesn't differentiante users from confs or apps.
             """
-        return (element in self._apps or element in self._confs or element in self._users)
+        return (element in self.apps or element in self.confs or element in self.users)
 
-    def querry(self, user: str, app: str, conf: str):
+    def querry(self, app: str, conf: str = "default", user: str = config.userName):
         """ Check if a specific config is in the index. """
-        return (user in self._users and app in self._apps and conf in self._confs)
+        if user not in self.users:
+            return False
+        if app not in self._dict[user]:
+            return False
+        return conf in self._dict[user][app]
 
     def insert(self, user, app, conf):
         """ Isert something in the index, and update its properties accordingly """
-        self._users.add(user)
-        self._apps.add(app)
-        self._confs.add(conf)
         if user not in self._dict:
             self._dict[user] = {app: [conf]}
-        elif app not in self._dict[user]:
+            self._users.add(user)
+        if app not in self._dict[user]:
             self._dict[user][app] = [conf]
-        elif conf not in self._dict[user][app]:
+            self._apps.append(app)
+        if conf not in self._dict[user][app]:
             self._dict[user][app].append(conf)
+            self._confs.append(conf)
+
+    def remove(self, app: str, conf: str = "default", user: str = config.userName):
+        if not self.querry(app, conf, user):
+            return
+        self._confs.remove(conf)
+        self._dict[user][app].remove(conf)
+        if len(self._dict[user][app]) < 1:
+            del self._dict[user][app]
+            self._apps.remove(app)
+        if len(self._dict[user]) < 1:
+            del self._dict[user]
+            self._users.remove(user)
 
     def update(self):
         """ Update the index file.
 
             This action is performed automatically when closing DotManager.
             """
-        with open(indexPath, 'wt') as jsonIndex:
-            serialize(self._dict, jsonIndex, indent=4, sort_keys=True)
+        with open(config.indexPath, 'wt') as jsonIndex:
+            serialize(self._dict, jsonIndex, indent=4, sort_keys=True, ensure_ascii=False)
 
 
 index = __Index()
+""" __Index() object containing information about saved configs.
+
+    Since an atexit is registered for this object's update() function, using any other
+    instance of the __Index() won't work as a way to update DotManager's index.json.
+    """
+
+# When DotManager closes, save any changes made to the index
+# Updating on exit reduces I/O overhead by writing the file once.
+# Using atexit ensures that no matter what happens during DotManager's,
+# execution, the update is updated with its changes, given that error
+# handling is done properly.
 atexit.register(index.update)

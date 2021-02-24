@@ -36,6 +36,17 @@ Commands:
                   Default: Your username
 ```
 
+### Upcoming features ###
+
+- Use symlinks to load a config
+- Menus for mass operations like `dot save all` etc
+- Verbosity
+- Easily backup/restore everything with a tar archive
+- Saving said archive to OAuth storages like Drive, DropBox...
+- Repository support (Gitlab & Github)
+- Configuration file
+- More as development progresses 😏
+
 ### Installation ###
 
 For now, this package is available through test.PyPi.  

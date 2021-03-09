@@ -6,39 +6,42 @@
 # Ludovic Fernandez
 # http://github.com/Wrexes
 
-import os
 import json
-import shutil
-from pprint import pprint
+import os
 from pathlib import Path
+import shutil
+from typing import Union
 
 import DotManager.config as config
-import DotManager.dotinfo as dotinfo
+from DotManager.dotinfo import DotInfo
 from DotManager.index import index
-from DotManager.tools import realpath, eprint
+from DotManager.tools import realpath
 
 
 class SaveInfo:
-    def __init__(self, dot: dotinfo, userName, confName, saveDir):
+    def __init__(self,
+                 dot: DotInfo,
+                 conf: str,
+                 user: str,
+                 saveDir: Union[str, Path]):
         # DotInfo stuff
         self.include = dot.include
         self.exclude = dot.exclude
 
         # SaveInfo stuff
-        self.userName = userName
+        self.userName = user
         self.dotName = dot.name
-        self.confName = confName
+        self.confName = conf
         self.saveDir = saveDir
 
         # Save destination name and location
-        self.baseName = Path(userName + '-' + dot.name + '-' + confName)
+        self.baseName = Path(f"{user}-{dot.name}-{conf}")
         self.location = Path(saveDir).joinpath(self.baseName)
 
         # String builders for code readability
-        self._FileExists = dot.name + " config '" + \
-            confName + "' already exists for " + userName + "."
-        self._Skip = "Skipping " + userName + "'s " + \
-            confName + "config for " + dot.name + "."
+        self._FileExists = \
+            f"{dot.name} config '{conf}' already exists for {user}."
+        self._Skip = f"Skipping {user}'s {conf} config for {dot.name}."
 
         # Dictionary matching what goes where
         self.match = {}
@@ -48,11 +51,10 @@ class SaveInfo:
             shutil.rmtree(self.location)
         self.location.mkdir(parents=True)
 
-
     def copy_conf(self):
         for inc in self.include:
             src = Path(realpath(inc))
-            dst = self.location / src.name
+            dst = self.location.joinpath(src.name)
             if not src.exists() or dst.exists():
                 continue
             if src.is_file():
@@ -68,32 +70,31 @@ class SaveInfo:
                     os.remove(item)
                 else:
                     shutil.rmtree(item)
-
         # for root, dirs, files in os.walk(destination):
-        """ I'm keeping this in case the above exclusion cleanup code breaks.
-            I have a bad feeling about it for some reason. It seemed too simple.
-            """
         #     if dot.is_excluded(root):
         #         shutil.rmtree(root)
         #     for f in files:
         #         if dot.is_excluded(f):
         #             os.remove(f)
+        """ I'm keeping this in case the above exclusion cleanup code breaks.
+            I have a bad feeling about it for some reason. It seemed too simple.
+            """
 
     def create_dotmatch(self):
         with self.location.joinpath(".dotmatch.json").open(mode='wt') as f:
             json.dump(self.match, f, indent=4, sort_keys=True)
 
 
-def save(dot: dotinfo,
-         userName=config.userName,
-         confName="default",
-         saveDir=config.saveDir,
-         force=False):
+def save(dot: DotInfo,
+         conf: str = "default",
+         user: str = config.userName,
+         saveDir: Union[str, Path] = config.saveDir,
+         force: bool = False):
     """ Save your config to `saveDir/userName-dot.name-confName`.
         Also create a corresponding entry in the index.
         """
-    info = SaveInfo(dot, userName, confName, saveDir)
-    if index.querry(userName, dot.name, confName):
+    info = SaveInfo(dot, conf, user, saveDir)
+    if index.querry(dot.name, conf, user):
         while not force:
             print(info._FileExists)
             answer = 'x' + str(input("Overwrite it ? (y/N) ")).lower()
@@ -109,4 +110,4 @@ def save(dot: dotinfo,
     info.copy_conf()
     info.cleanup_exclusions()
     info.create_dotmatch()
-    index.insert(userName, dot.name, confName)
+    index.insert(user, dot.name, conf)

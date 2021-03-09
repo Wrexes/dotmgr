@@ -26,13 +26,16 @@
 import os
 import sys
 from pathlib import Path
+from typing import Union
 
-# Print a message on stderr
 def eprint(*args, **kwargs):
+    """ Wrapper around print to write to stderr. """
     print(*args, file=sys.stderr, **kwargs)
 
-# Expand a path's environment variables and user (~)
-def realpath(path: str) -> str:
+def realpath(path: Union[str, os.PathLike]) -> Path:
+    """ Expand a path's environment variables and tilde (~), and return it as a
+        pathlib.Path object.
+        """
     path = os.path.expandvars(path)
     path = os.path.expanduser(path)
     return Path(path)

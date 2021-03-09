@@ -25,19 +25,18 @@
 
 import os
 import getpass
-import tempfile
 from pathlib import Path
 
 # DotManager version
-version = '0.5.1'
+version = '1.0.0'
 
 # Set the base directory for config files
 if "XDG_CONFIG_HOME" in os.environ:
-    xdgConfDir = Path(os.environ.get("XDG_CONFIG_HOME"))
+    xdgConfDir = Path(str(os.environ.get("XDG_CONFIG_HOME")))
 elif "XDG_USER_CONFIG_DIR" in os.environ:
-    xdgConfDir = Path(os.environ.get("XDG_USER_CONFIG_DIR"))
+    xdgConfDir = Path(str(os.environ.get("XDG_USER_CONFIG_DIR")))
 else:
-    xdgConfDir = Path(os.path.expanduser('~/.config'))
+    xdgConfDir = Path(os.path.expandvars('$HOME/.config'))
 
 # What is the user's name ?
 userName = str(getpass.getuser())

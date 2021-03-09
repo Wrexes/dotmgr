@@ -30,9 +30,9 @@ DotManager: A flexible dotfile manager
 
 Usage:
   dot show [supported | installed | saved]
-  dot save [all | <app>] [<name>] [<user>] [-f | --force] [--nolink]
-  dot load [all | <app>] [<name>] [<user>] [-f | --force] [--nolink]
-  dot rm   [all | <app>] [<name>] [<user>] [-f | --force]
+  dot save [all | <app>] [<name>] [<user>] [--force] [--nolink]
+  dot load [all | <app>] [<name>] [<user>] [--force] [--nolink]
+  dot rm   [all | <app>] [<name>] [<user>] [--force]
 
 Options:
   -h --help     Show this message and exit.
@@ -63,13 +63,12 @@ Commands:
 
 import docopt
 
-import DotManager.tools as tools
-import DotManager.config as config
-import DotManager.dotinfo as dotinfo
-from DotManager.index import index
-from DotManager.defaults import version
+from DotManager.dotinfo import DotInfo
 from DotManager.commands.save import save
 from DotManager.commands.show import show
+from DotManager.defaults import version
+import DotManager.dotinfo as dotinfo
+import DotManager.tools as tools
 
 argv: dict = docopt.docopt(__doc__, version=version)
 
@@ -90,7 +89,7 @@ def main(argv):
     params = {"force": argv["--force"]}
 
     if argv["save"]:
-        dots: dict[dotinfo] = dotinfo.installed()
+        dots: dict[str, DotInfo] = dotinfo.installed()
         if argv["<user>"]:
             params["userName"] = argv["<user>"]
         if argv["<name>"]:

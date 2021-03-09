@@ -37,4 +37,12 @@
     one with the other, without overwriting its keys and with skipping
     those that already exist and have nothing changed about them.
     Alright. That's enough fooling around. Back to it !
+
+    Hi ! Today I installed PyRight. I wasn't using any sort of LSP for
+    Python beside Sourcery before. Gosh it brought up so many mistakes I did.
+    I'm glad I installed PyRight, pretty cool right off the bat.
+    And since I can use both PyRight and Sourcery, nothing can stop me now !
+    Except the extra long refactor I did up until 1am because heck some of my
+    code was really bad. Especially for a statically typed program. I typed lots
+    of stuff wrong. 😒
     """

@@ -20,28 +20,33 @@ from DotManager.tools import realpath
 
 class SaveInfo:
     def __init__(self,
-                 dot: DotInfo,
+                 dot: Union[DotInfo, str],
                  conf: str,
                  user: str,
                  saveDir: Union[str, Path]):
+
+        def __get_name() -> str:
+            return dot.name if isinstance(dot, DotInfo) else dot
+
         # DotInfo stuff
-        self.include = dot.include
-        self.exclude = dot.exclude
+        if isinstance(dot, DotInfo):
+            self.include = dot.include
+            self.exclude = dot.exclude
 
         # SaveInfo stuff
         self.userName = user
-        self.dotName = dot.name
+        self.dotName = __get_name()
         self.confName = conf
         self.saveDir = saveDir
 
         # Save destination name and location
-        self.baseName = Path(f"{user}-{dot.name}-{conf}")
+        self.baseName = Path(f"{user}-{__get_name()}-{conf}")
         self.location = Path(saveDir).joinpath(self.baseName)
 
         # String builders for code readability
         self._FileExists = \
-            f"{dot.name} config '{conf}' already exists for {user}."
-        self._Skip = f"Skipping {user}'s {conf} config for {dot.name}."
+            f"{__get_name()} config '{conf}' already exists for {user}."
+        self._Skip = f"Skipping {user}'s {conf} config for {__get_name()}."
 
         # Dictionary matching what goes where
         self.match = {}

@@ -63,7 +63,24 @@ class DotInfo:
         self.include: list[str] = sorted([f.rstrip('/') for f in Include])
         self.exclude: list[str] = sorted([f.rstrip('/') for f in Exclude])
         self._files:  set[Path]
-        self.__validate()
+
+        # TODO: Create custom exceptions
+        regex = "^[a-zA-Z0-9_][a-zA-Z0-9_i\-]+$"
+        if self.name is None:
+            raise KeyError("Missing name property.")
+        if re.fullmatch(regex, self.name) is None:
+            raise KeyError(
+                f"Invalid name: {self.name}\n" +
+                f"Must match this regex: {regex}")
+        if self.command is None:
+            raise KeyError("Missing command property.")
+        if re.fullmatch(regex, self.command) is None:
+            raise NameError(
+                f"Invalid command: {self.command}\n" +
+                f"Must match this regex: {regex}")
+        if self.include.__len__() < 1:
+            raise KeyError(f"No config file to include for {self.name}")
+
 
     @property
     def files(self):  # -> set[Path]:
@@ -105,28 +122,6 @@ class DotInfo:
         except json.JSONDecodeError as e:
             tools.eprint(f"Error while parsing {str(jsonFile)}:\n  {e.msg}")
             exit(1)
-
-    def __validate(self):
-        """ Private method to check that a DotInfo's values are valid.
-
-            It is automatically called when instanciating a new DotInfo, which
-            means that you should never have to use it yourself.
-            """
-        regex = "^[a-zA-Z0-9_][a-zA-Z0-9_i\-]+$"
-        if self.name is None:
-            raise KeyError("Missing name property.")
-        if re.fullmatch(regex, self.name) is None:
-            raise KeyError(
-                f"Invalid name: {self.name}\n" +
-                f"Must match this regex: {regex}")
-        if self.command is None:
-            raise KeyError("Missing command property.")
-        if re.fullmatch(regex, self.command) is None:
-            raise NameError(
-                f"Invalid command: {self.command}\n" +
-                f"Must match this regex: {regex}")
-        if self.include.__len__() < 1:
-            raise KeyError(f"No config file to include for {self.name}")
 
     def is_installed(self) -> bool:
         """ Returns true if the app is installed on the user's machine. """

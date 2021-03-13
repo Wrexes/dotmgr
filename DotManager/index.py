@@ -105,14 +105,14 @@ class __Index:
 
     def querry(self,
                app: str,
-               conf: str = "default",
+               name: str = "default",
                user: str = config.userName) -> bool:
         """ Check if a specific config is in the index. """
         if user not in self.users:
             return False
         if app not in self._dict[user]:
             return False
-        return conf in self._dict[user][app]
+        return name in self._dict[user][app]
 
     def insert(self, app: str, conf: str, user: str):
         """ Isert something in the index. """

@@ -36,6 +36,7 @@ def realpath(path: Union[str, os.PathLike]) -> Path:
     """ Expand a path's environment variables and tilde (~), and return it as a
         pathlib.Path object.
         """
-    path = os.path.expandvars(path)
-    path = os.path.expanduser(path)
-    return Path(path)
+    realpath = str(path)
+    realpath = str(os.path.expandvars(realpath))
+    realpath = str(os.path.expanduser(realpath))
+    return Path(realpath).resolve()

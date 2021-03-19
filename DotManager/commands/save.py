@@ -20,33 +20,33 @@ from DotManager.tools import realpath
 
 class SaveInfo:
     def __init__(self,
-                 dot: Union[DotInfo, str],
-                 conf: str,
+                 app: Union[DotInfo, str],
+                 name: str,
                  user: str,
                  saveDir: Union[str, Path]):
 
         def __get_name() -> str:
-            return dot.name if isinstance(dot, DotInfo) else dot
+            return app.name if isinstance(app, DotInfo) else app
 
         # DotInfo stuff
-        if isinstance(dot, DotInfo):
-            self.include = dot.include
-            self.exclude = dot.exclude
+        if isinstance(app, DotInfo):
+            self.include = app.include
+            self.exclude = app.exclude
 
         # SaveInfo stuff
         self.userName = user
         self.dotName = __get_name()
-        self.confName = conf
+        self.confName = name
         self.saveDir = saveDir
 
         # Save destination name and location
-        self.baseName = Path(f"{user}-{__get_name()}-{conf}")
+        self.baseName = Path(f"{user}-{__get_name()}-{name}")
         self.location = Path(saveDir).joinpath(self.baseName)
 
         # String builders for code readability
         self._FileExists = \
-            f"{__get_name()} config '{conf}' already exists for {user}."
-        self._Skip = f"Skipping {user}'s {conf} config for {__get_name()}."
+            f"{__get_name()} config '{name}' already exists for {user}."
+        self._Skip = f"Skipping {user}'s {name} config for {__get_name()}."
 
         # Dictionary matching what goes where
         self.match = {}
@@ -90,16 +90,16 @@ class SaveInfo:
             json.dump(self.match, f, indent=4, sort_keys=True)
 
 
-def save(dot: DotInfo,
-         conf: str = "default",
+def save(app: DotInfo,
+         name: str = "default",
          user: str = config.userName,
          saveDir: Union[str, Path] = config.saveDir,
          force: bool = False):
     """ Save your config to `saveDir/userName-dot.name-confName`.
         Also create a corresponding entry in the index.
         """
-    info = SaveInfo(dot, conf, user, saveDir)
-    if index.querry(dot.name, conf, user):
+    info = SaveInfo(app, name, user, saveDir)
+    if index.query(app.name, name, user):
         while not force:
             print(info._FileExists)
             answer = 'x' + str(input("Overwrite it ? (y/N) ")).lower()
@@ -115,4 +115,4 @@ def save(dot: DotInfo,
     info.copy_conf()
     info.cleanup_exclusions()
     info.create_dotmatch()
-    index.insert(user, dot.name, conf)
+    index.insert(app.name, name, user)

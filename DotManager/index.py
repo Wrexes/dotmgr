@@ -103,7 +103,7 @@ class __Index:
                 or element in self.confs
                 or element in self.users)
 
-    def querry(self,
+    def query(self,
                app: str,
                name: str = "default",
                user: str = config.userName) -> bool:
@@ -114,24 +114,24 @@ class __Index:
             return False
         return name in self._dict[user][app]
 
-    def insert(self, app: str, conf: str, user: str):
+    def insert(self, app: str, name: str, user: str):
         """ Isert something in the index. """
         if user not in self._dict:
-            self._dict[user] = {app: [conf]}
+            self._dict[user] = {app: [name]}
             self._users.add(user)
         if app not in self._dict[user]:
-            self._dict[user][app] = [conf]
+            self._dict[user][app] = [name]
             self._apps.append(app)
-        if conf not in self._dict[user][app]:
-            self._dict[user][app].append(conf)
-            self._confs.append(conf)
+        if name not in self._dict[user][app]:
+            self._dict[user][app].append(name)
+            self._confs.append(name)
 
-    def remove(self, app: str, conf: str, user: str):
+    def remove(self, app: str, name: str, user: str):
         """ Remove something from the index. """
-        if not self.querry(app, conf, user):
+        if not self.query(app, name, user):
             return
-        self._confs.remove(conf)
-        self._dict[user][app].remove(conf)
+        self._confs.remove(name)
+        self._dict[user][app].remove(name)
         if len(self._dict[user][app]) < 1:
             del self._dict[user][app]
             self._apps.remove(app)

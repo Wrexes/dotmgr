@@ -69,18 +69,15 @@ class DotInfo:
         if self.name is None:
             raise KeyError("Missing name property.")
         if re.fullmatch(regex, self.name) is None:
-            raise KeyError(
-                f"Invalid name: {self.name}\n" +
-                f"Must match this regex: {regex}")
+            raise KeyError(f"Invalid name: '{self.name}', " +
+                           f"Must match this regex: {regex}")
         if self.command is None:
             raise KeyError("Missing command property.")
         if re.fullmatch(regex, self.command) is None:
-            raise NameError(
-                f"Invalid command: {self.command}\n" +
-                f"Must match this regex: {regex}")
+            raise NameError(f"Invalid command: '{self.command}', " +
+                            f"(Must match this regex: {regex})")
         if self.include.__len__() < 1:
             raise KeyError(f"No config file to include for {self.name}")
-
 
     @property
     def files(self):  # -> set[Path]:

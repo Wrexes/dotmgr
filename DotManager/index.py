@@ -47,11 +47,10 @@ class __Index:
         """
 
     def __init__(self):
+        self._dict: dict[str, dict[str, list[str]]] = {}
         try:
             with open(config.indexPath, 'rt') as jsonIndex:
-                self._dict: dict = deserialize(jsonIndex)
-        except FileNotFoundError:
-            self._dict: dict = {}
+                self._dict = deserialize(jsonIndex)
         except JSONDecodeError as e:
             eprint("Broken index !")
             eprint(e)
@@ -83,15 +82,15 @@ class __Index:
     """ Get a copy on the deserialized JSON index. """
 
     @property
-    def apps(self) -> set: return set(self._apps)
+    def apps(self) -> set[str]: return set(self._apps)
     """ Get a set of all the apps registered in the index. """
 
     @property
-    def confs(self) -> set: return set(self._confs)
+    def confs(self) -> set[str]: return set(self._confs)
     """ Get a set of all the configurations names saved in the index. """
 
     @property
-    def users(self) -> set: return set(self._users)
+    def users(self) -> set[str]: return set(self._users)
     """ Get a set of all the users registered in the index. """
 
     def has(self, element: str) -> bool:

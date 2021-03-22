@@ -9,11 +9,12 @@
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 from typing import Union
 
 import DotManager.config as config
-from DotManager.dotinfo import DotInfo
+from DotManager.dotinfo import DotInfo, installed
 from DotManager.index import index
 from DotManager.tools import realpath
 
@@ -116,3 +117,50 @@ def save(app: DotInfo,
     info.cleanup_exclusions()
     info.create_dotmatch()
     index.insert(app.name, name, user)
+
+
+# 1. Fetch set of installed apps
+# 2. Ask which ones to save the confs of
+# 3. "Would you like to set a custom name ?"
+# 3b. "Select which apps"
+# 4. "Would you like to set a custom user ?"
+# 4b. "Select which apps"
+# Loop 3 and 4 untill everything is set.
+# 5. Batch save
+def interactive(force: bool):
+    """ Interactively prompt the user about what conf to save. """
+    dots:    dict[str, DotInfo] = installed()
+    apps:    list[str] = sorted(dots.keys(), key=str.lower, reverse=True)
+    appsLen: int = len(apps)
+    width:   int = len(str(appsLen))
+
+    menu: str = "Installed apps:\n"
+    for n, app in zip(range(appsLen, 0, -1), apps):
+        menu += f"  {n:{width}}) {app}\n"
+    menu += "Apps to exclude (e.g. ^3 4 5 6 7-10)\n"
+    menu += "Invalid selections will be ignored.\n"
+    menu += "==> "
+
+    exclude = set()
+    userInput: str = input(menu).lower()
+    for match in re.finditer(r'|\^\d+|\d+-\d+|\d+', userInput):
+        s = match[0]
+        if not len(s):
+            continue
+        elif s.startswith('^'):
+            exclude.update(range(int(s.lstrip('^'))+1))
+        elif s.__contains__('-'):
+            exclude.update(range(int(s.split('-')[0]),
+                                 int(s.split('-')[1])))
+        else:
+            exclude.add(int(s))
+
+    for x in exclude:
+        if x < 1 or x > appsLen:
+            continue
+        del dots[apps[appsLen - x]]
+
+    #TODO: Implement steps 3 through 4b.
+
+    for dot in dots.values():
+        save(dot, force=force)

@@ -141,6 +141,8 @@ def interactive(force: bool):
     menu += "Invalid selections will be ignored.\n"
     menu += "==> "
 
+    # Using a set of ints for now, but will probably
+    # have to be transformed into a set of param dicts.
     exclude = set()
     userInput: str = input(menu).lower()
     for match in re.finditer(r'|\^\d+|\d+-\d+|\d+', userInput):
